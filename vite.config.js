@@ -20,9 +20,9 @@ function cabecerasSeguridad() {
     "frame-ancestors 'none'",
     "object-src 'none'",
     "img-src 'self' data: blob:",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "style-src 'self' 'unsafe-inline'",
     "script-src 'self'",
-    "font-src 'self' https://fonts.gstatic.com",
+    "font-src 'self'",
     `connect-src 'self' ${supabase} https://*.supabase.co wss://*.supabase.co`.trim(),
     'upgrade-insecure-requests',
   ].join('; ');

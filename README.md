@@ -206,7 +206,6 @@ La coordinación construye las seis áreas por bloques, con el líder de cada á
 | [`docs/EMPIEZA_AQUI.md`](docs/EMPIEZA_AQUI.md) | Todos | Guía de arranque: qué hacer el primer día y dónde está cada cosa |
 | [`docs/CRONOGRAMA.md`](docs/CRONOGRAMA.md) | Todos | Fechas, hitos y alcance mínimo por área |
 | [`docs/SEGURIDAD.md`](docs/SEGURIDAD.md) | Coordinación | Auditoría OWASP, huecos cerrados y controles |
-| [`docs/DEPLOY.md`](docs/DEPLOY.md) | Coordinación | Cómo publicar la app (Vercel o Netlify) |
 | [`docs/QA.md`](docs/QA.md) | Todos | Niveles de prueba, criterios de aceptación y métricas |
 | [`docs/FLUJO_APP.md`](docs/FLUJO_APP.md) | Todos | La app de punta a punta: pantallas, roles, flujo de negocio en 14 pasos y tablero de control |
 | [`docs/HISTORIA_FLUJO.md`](docs/HISTORIA_FLUJO.md) | Todos | El mismo flujo grabado en la app real: 15 capítulos con capturas y cifras de la base |
