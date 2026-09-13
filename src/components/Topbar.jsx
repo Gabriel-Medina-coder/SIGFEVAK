@@ -3,7 +3,7 @@ import { MenuIcon } from './Iconos';
 // Barra superior pegajosa: título y subtítulo del módulo más los botones de acción que cada pantalla decide.
 export default function Topbar({ titulo, subtitulo, acciones, onAbrirMenu }) {
   return (
-    <header className="px-7 py-[18px] border-b border-border flex items-center justify-between gap-3 sticky top-0 bg-bg z-10">
+    <header className="px-7 max-[600px]:px-4 py-[18px] border-b border-border flex items-center justify-between gap-3 sticky top-0 bg-bg z-10">
       <div className="flex items-center gap-3 min-w-0">
         <button
           onClick={onAbrirMenu}

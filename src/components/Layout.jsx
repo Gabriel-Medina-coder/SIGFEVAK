@@ -31,7 +31,7 @@ export default function Layout() {
             acciones={extra.acciones}
             onAbrirMenu={() => setMenuAbierto(true)}
           />
-          <div className="p-7 flex flex-col gap-6">
+          <div className="p-7 max-[600px]:p-4 flex flex-col gap-6">
             <Outlet />
           </div>
         </main>
