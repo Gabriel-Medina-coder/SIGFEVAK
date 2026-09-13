@@ -1,4 +1,4 @@
-# Estado — Área 4 · Nómina de agentes
+# Estado · Área 4 · Nómina de agentes
 
 Última actualización: 2026-09-13 por Diego (coordinación) con Fernando
 
@@ -8,24 +8,24 @@
 
 ## Hecho
 
-- [x] #61 Integración I-02 e I-12 con el área 2: `fecha_cobro`, `subtotal`, `fecha_vencimiento`, `v_cartera_agente` y seed único de agentes (Diego, Fernando) — main 2026-09-13
-- [x] #63 Integración I-05 con el área 6 e I-06 con el área 1 (Diego, Fernando) — main 2026-09-13
-- [x] #64 Enums, catálogos `zonas`, `esquemas_compensacion`, `tramos_comision` y trigger de tramos (Diego, Fernando) — main 2026-09-13
-- [x] #65 Ampliación de `agentes_ventas` y tablas de operación con RLS (Diego, Fernando) — main 2026-09-13
-- [x] #66 Seed legal y de negocio (Diego, Fernando) — main 2026-09-13
-- [x] #67 `fn_parametro` y trigger de salario mínimo (Diego, Fernando) — main 2026-09-13
-- [x] #68 `fn_transicion_periodo` y `fn_bloquea_periodo_cerrado` (Diego, Fernando) — main 2026-09-13
-- [x] #69 Vistas sobre `facturas` del área 2 (Diego, Fernando) — main 2026-09-13
-- [x] #70 Vistas de contrato `v_retenciones_area5` y `v_desempeno_agente_zona` (Diego, Fernando) — main 2026-09-13
-- [x] #71 Vistas `v_recibo_nomina`, `v_nomina_totales`, `v_sbc_bimestral` (Diego, Fernando) — main 2026-09-13
-- [x] #76 `fn_calcular_periodo` y `fn_aplicar_ajustes` (Diego, Fernando) — main 2026-09-13
-- [x] #77 `fn_calcular_nomina` (Diego, Fernando) — main 2026-09-13
-- [x] #80 Pruebas SQL del área (Diego, Fernando) — main 2026-09-13
+- [x] #62 Integración I-03 con el área 5: `v_tasas_isn` y `v_retenciones_area5` (Diego, Fernando) · main 2026-09-13
+- [x] #61 Integración I-02 e I-12 con el área 2: `fecha_cobro`, `subtotal`, `fecha_vencimiento`, `v_cartera_agente` y seed único de agentes (Diego, Fernando) · main 2026-09-13
+- [x] #63 Integración I-05 con el área 6 e I-06 con el área 1 (Diego, Fernando) · main 2026-09-13
+- [x] #64 Enums, catálogos `zonas`, `esquemas_compensacion`, `tramos_comision` y trigger de tramos (Diego, Fernando) · main 2026-09-13
+- [x] #65 Ampliación de `agentes_ventas` y tablas de operación con RLS (Diego, Fernando) · main 2026-09-13
+- [x] #66 Seed legal y de negocio (Diego, Fernando) · main 2026-09-13
+- [x] #67 `fn_parametro` y trigger de salario mínimo (Diego, Fernando) · main 2026-09-13
+- [x] #68 `fn_transicion_periodo` y `fn_bloquea_periodo_cerrado` (Diego, Fernando) · main 2026-09-13
+- [x] #69 Vistas sobre `facturas` del área 2 (Diego, Fernando) · main 2026-09-13
+- [x] #70 Vistas de contrato `v_retenciones_area5` y `v_desempeno_agente_zona` (Diego, Fernando) · main 2026-09-13
+- [x] #71 Vistas `v_recibo_nomina`, `v_nomina_totales`, `v_sbc_bimestral` (Diego, Fernando) · main 2026-09-13
+- [x] #76 `fn_calcular_periodo` y `fn_aplicar_ajustes` (Diego, Fernando) · main 2026-09-13
+- [x] #77 `fn_calcular_nomina` (Diego, Fernando) · main 2026-09-13
+- [x] #80 Pruebas SQL del área (Diego, Fernando) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #62 Integración I-03 con el área 5: la tasa de ISN de Chiapas ya está cargada; falta `v_tasas_isn` del área 5
-- [ ] #73 Módulo del área en la app compartida (Diego, Fernando) — espera la app base con menú
+- [ ] #72 a #75, #78 y #79 Servicios, módulo, agentes, catálogos y metas, pantalla de periodo por rol, recibos, dispersión y reportes (Diego, Fernando) · construidos, en prueba en navegador
 
 ## Bloqueado
 
@@ -33,7 +33,7 @@
 
 ## Próximo
 
-- #72, #74, #75, #78, #79, #81
+- #81 aceptación y punta a punta con capturas, #82 cierre
 
 ## Bitácora
 
@@ -45,6 +45,8 @@
 - Decisión: `metas.sin_retardos` es la bandera manual del premio de puntualidad; `parametros_legales.fuente` guarda el origen de cada valor; `v_retenciones_area5` agrega `isn_estimado`.
 - Decisión: INFONAVIT fuera del alcance (pregunta abierta 4). Nuevas preguntas 9 (tope exento de puntualidad) y 10 (ramo excedente IMSS) para el analista.
 - Preguntas abiertas 1 a 8 cerradas en la sección 16 del contexto.
+- Módulo construido en `src/modules/area4-nomina/` con servicios en `src/services/area4/`: calcula CONTADOR o ADMINISTRADOR, revisa GERENTE_VENTAS, autoriza AUTORIZADOR y quien calculó no ve habilitado autorizar. Recibo con claves SAT, CSV de dispersión y reportes. Consultas verificadas con la cuenta del gerente. Falta la prueba en navegador para cerrar los issues.
+- Integración I-03 cerrada (#62): el Área 5 publica `v_tasas_isn`.
 
 ### Lun 14 sep · Base de datos
 
