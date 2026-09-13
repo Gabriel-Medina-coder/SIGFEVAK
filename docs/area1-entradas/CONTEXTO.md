@@ -1145,14 +1145,14 @@ Sigue la plantilla global `docs/plantillas/REPORTE_FINAL_LIDER.md`:
 
 Un agente o integrante que se tope con alguna de estas **no decide por su cuenta**: la registra y la escala al líder.
 
-1. **Impuestos de importación.** ¿Los captura el área 1 a mano en `impuestos_unitarios` cuando llega la mercancía, o los calcula el Área 5 después y se actualiza la entrada? Si es lo segundo, el capital cambia después de registrado y el trigger del Área 3 solo corre en INSERT. Propuesta: captura manual en la entrada; el Área 5 solo lee (`v_entradas_importacion`).
+1. **Cerrada (#22, I-04).** Impuestos de importación: el área 1 los captura a mano en `impuestos_unitarios` al registrar la entrada; el Área 5 solo lee `v_entradas_importacion`. El capital no cambia después de registrado.
 2. **Costo de inventario.** El Área 3 guarda último costo en `valor_entrada` (RN-A3-08). Finanzas podría requerir promedio ponderado. Afecta a `v_inventario_actual`, no al área 1, pero el área 1 tiene el histórico para calcularlo. ¿Se pide?
 3. **Rotación por lote en días.** Requiere que `detalle_factura` (Área 2/3) registre de qué lote sale la mercancía. Hoy no existe. ¿Se pide como integración o se acepta la aproximación con `v_rotacion`?
 4. **Producto rechazado en calidad.** ¿Se reprocesa (nueva orden con las unidades como insumo), se desecha (merma) o se devuelve materia al proveedor? Hoy las unidades rechazadas simplemente no entran al inventario y su costo se reparte entre las buenas.
 5. **Etapas internas del proceso** (ensamble, soldadura, calibración) con tiempo estándar vs real y estación de trabajo. Fuera de alcance en 5 días; ¿se documenta como fase 2?
-6. **Precio de venta sugerido.** ¿Lo define el área 1 al dar de alta el producto o el Área 2 / Área 6? Hoy es una columna opcional que cualquiera puede llenar.
-7. **Devoluciones a proveedor.** Mercancía `DANADO` o `INCOMPLETO` que se regresa: ¿se registra como ajuste de inventario del Área 3 o necesita una tabla de devoluciones? Coincide con la pregunta abierta 3 del Área 3.
-8. **Múltiples almacenes de producto terminado.** `fn_cerrar_orden` toma el primer almacén activo de tipo `PRODUCTO_TERMINADO`. Si hay varios, ¿la orden debe indicar destino?
+6. **Cerrada (#22).** Precio de venta sugerido: lo llena el área 1 al dar de alta el producto; las Áreas 2 y 6 pueden ajustarlo desde sus pantallas. Es referencia, no precio real.
+7. **Cerrada (#22, I-11).** Devoluciones a proveedor: mercancía `DANADO` o `INCOMPLETO` que se regresa se registra como `ajustes_inventario` del Área 3 con motivo `DEVOLUCION_PROVEEDOR`; la reclamación queda en `observaciones` de la entrada. No hay tabla de devoluciones.
+8. **Cerrada (#22).** Múltiples almacenes de producto terminado: en la entrega hay un solo almacén `PRODUCTO_TERMINADO` activo y `fn_cerrar_orden` lo toma; que la orden indique destino queda como fase 2.
 
 ---
 
