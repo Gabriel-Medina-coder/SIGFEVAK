@@ -18,10 +18,11 @@
 - [x] #8 Vista de contrato `v_salidas_area2` (Diego, Davor) · main 2026-09-13
 - [x] #9 Seed de 20 productos, 12 entradas, 10 salidas y 1 ajuste (Diego, Davor) · main 2026-09-13
 - [x] #10 Pruebas SQL de RN-A3-01, 04, 05, 07 y 08 (Diego, Davor) · main 2026-09-13
+- [x] #11 a #18 Módulo, servicios, catálogo, entrada, kardex, conciliación, reportes y prueba de punta a punta con capturas (Diego, Davor) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #11 a #17 Módulo, servicios, catálogo, entrada, kardex, conciliación y reportes (Diego, Davor) · construidos, en prueba en navegador
+- Nada
 
 ## Bloqueado
 
@@ -29,7 +30,7 @@
 
 ## Próximo
 
-- #18 prueba de punta a punta con capturas, #19 cierre
+- #19 cierre del área: reporte final y evaluación del equipo (líder)
 
 ## Bitácora
 
