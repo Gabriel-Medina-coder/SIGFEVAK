@@ -182,7 +182,9 @@ export default function Nomina() {
           onCambio={agentes.recargar}
         />
       )}
-      {pestana === 'metas' && <Metas agentes={activos} escribe={escribe} />}
+      {pestana === 'metas' && (
+        <Metas agentes={activos} escribe={escribe && usuario?.rol === 'ADMINISTRADOR'} />
+      )}
       {pestana === 'catalogos' && <Catalogos escribe={usuario?.rol === 'ADMINISTRADOR'} />}
     </>
   );
