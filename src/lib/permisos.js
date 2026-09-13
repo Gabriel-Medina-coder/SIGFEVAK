@@ -49,7 +49,7 @@ export const MODULOS = [
 const ESCRITURA = {
   ADMINISTRADOR: ['entradas', 'contable', 'inventario', 'nomina', 'regulacion', 'marketing'],
   ALMACEN: ['entradas', 'inventario'],
-  CONTADOR: ['contable', 'regulacion'],
+  CONTADOR: ['contable', 'nomina', 'regulacion'], // nómina: calcula el periodo (docs/area4-nomina/TAREAS.md tarea 18)
   GERENTE_VENTAS: ['nomina'],
   AUTORIZADOR: ['nomina', 'regulacion'],
   COMERCIO_EXTERIOR: ['regulacion'],
