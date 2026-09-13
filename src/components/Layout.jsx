@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { moduloPorRuta } from '@/lib/permisos';
 import Sidebar from './Sidebar';
+import AvisoConexion from './AvisoConexion';
 import Topbar from './Topbar';
 
 // Cada pantalla registra sus botones de la topbar con useTopbar({ acciones, subtitulo }).
@@ -23,6 +24,7 @@ export default function Layout() {
       <div className="grid grid-cols-[240px_1fr] max-[960px]:block min-h-dvh bg-bg text-text">
         <Sidebar abierto={menuAbierto} onCerrar={() => setMenuAbierto(false)} />
         <main className="min-w-0 overflow-auto">
+          <AvisoConexion />
           <Topbar
             titulo={modulo.etiqueta}
             subtitulo={extra.subtitulo ?? modulo.subtitulo}

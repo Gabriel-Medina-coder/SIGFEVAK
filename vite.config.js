@@ -53,4 +53,18 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(import.meta.dirname, 'src') },
   },
+  build: {
+    // Separa las librerías grandes en su propio chunk para que carguen en paralelo y se cacheen aparte.
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (id.includes('react')) return 'react';
+          if (id.includes('@supabase')) return 'supabase';
+          if (id.includes('zod')) return 'validacion';
+          return 'vendor';
+        },
+      },
+    },
+  },
 });
