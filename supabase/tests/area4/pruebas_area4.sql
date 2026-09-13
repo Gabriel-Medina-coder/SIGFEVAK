@@ -1,4 +1,4 @@
--- Área 4 · Issues #80, #81 · Pruebas de RN-A4-01, RN-A4-03, RN-A4-04, RN-A4-08, RN-A4-09, RN-A4-13, RN-A4-15, RN-A4-18
+-- Área 4 · Issues #80, #81 · Pruebas de RN-A4-01, RN-A4-03, RN-A4-04, RN-A4-05, RN-A4-08, RN-A4-09, RN-A4-13, RN-A4-15, RN-A4-18
 -- y el ejemplo de la sección 10 exacto sobre el periodo 2026-09 del seed. Cada bloque lanza RAISE EXCEPTION si la
 -- regla no se cumple. Corre en una transacción que se revierte.
 BEGIN;
@@ -6,7 +6,7 @@ BEGIN;
 DO $$
 DECLARE
     v_zona_gen INT; v_zona_zlfn INT; v_esq INT; v_jorge INT; v_per INT; v_per_oct INT;
-    v_ok BOOLEAN; v_num DECIMAL; v_txt TEXT; r RECORD;
+    v_ok BOOLEAN; v_num DECIMAL; v_txt TEXT; r RECORD; v_ok_agente INT; v_per_nov INT; v_fac INT;
 BEGIN
     SELECT id_zona INTO v_zona_gen  FROM zonas WHERE zona_salarial = 'GENERAL' ORDER BY id_zona LIMIT 1;
     SELECT id_zona INTO v_zona_zlfn FROM zonas WHERE zona_salarial = 'ZLFN' ORDER BY id_zona LIMIT 1;
@@ -145,6 +145,45 @@ BEGIN
     END;
     IF NOT v_ok THEN RAISE EXCEPTION 'RN-A4-18 falló: modificó un periodo pagado'; END IF;
     UPDATE periodos_nomina SET estatus = 'CERRADO' WHERE id_periodo = v_per_oct;
+
+    -- ---------- Casos límite (#81) ----------
+    -- RN-A4-01: el salario exacto del mínimo de la ZLFN (440.87) sí se acepta
+    INSERT INTO agentes_ventas (nombre, sueldo_base, comision, id_zona, id_esquema, salario_diario, estatus)
+    VALUES ('PRUEBA ZLFN exacto', 13402, 1, v_zona_zlfn, v_esq, 440.87, 'BAJA');
+
+    -- RN-A4-04: un cumplimiento de 100 % exacto cae en el tramo 100-120 (3 %), no en el de 70-100
+    SELECT tasa INTO v_num FROM tramos_comision
+     WHERE id_esquema = v_esq AND pct_min <= 100 AND (pct_max IS NULL OR 100 < pct_max) ORDER BY pct_min DESC LIMIT 1;
+    IF v_num <> 0.03 THEN RAISE EXCEPTION 'RN-A4-04 falló: tasa al 100 %% = %', v_num; END IF;
+
+    -- RN-A4-05: un agente sin esquema cobra con su tasa de respaldo y queda en bitácora como excepción
+    INSERT INTO agentes_ventas (nombre, sueldo_base, comision, id_zona, salario_diario)
+    VALUES ('PRUEBA sin esquema', 10640, 2.5, v_zona_gen, 350) RETURNING id_agente INTO v_ok_agente;
+    INSERT INTO metas (id_agente, periodo, monto_meta) SELECT id_agente, '2030-11', 100000 FROM agentes_ventas WHERE estatus = 'ACTIVO';
+    INSERT INTO periodos_nomina (tipo, fecha_inicio, fecha_fin) VALUES ('MENSUAL', DATE '2030-11-01', DATE '2030-11-30') RETURNING id_periodo INTO v_per_nov;
+    PERFORM fn_calcular_periodo(v_per_nov, 'calc@sigfevak.mx');
+    IF NOT EXISTS (SELECT 1 FROM bitacora_nomina WHERE accion = 'SIN_ESQUEMA' AND (valor_nuevo->>'id_agente')::INT = v_ok_agente
+                     AND (valor_nuevo->>'tasa_respaldo')::DECIMAL = 0.025) THEN
+        RAISE EXCEPTION 'RN-A4-05 falló: sin bitácora de tasa de respaldo';
+    END IF;
+    IF (SELECT (valor_nuevo->>'tasa')::DECIMAL FROM bitacora_nomina WHERE accion = 'CALCULO'
+          AND (valor_nuevo->>'id_periodo')::INT = v_per_nov AND (valor_nuevo->>'id_agente')::INT = v_ok_agente) <> 0.025 THEN
+        RAISE EXCEPTION 'RN-A4-05 falló: no usó la tasa de respaldo';
+    END IF;
+
+    -- RN-A4-08: cancelar una factura cobrada en un periodo ya autorizado genera el ajuste negativo con la tasa pagada
+    SELECT f.id_factura, f.subtotal INTO v_fac, v_num FROM facturas f
+     WHERE f.id_agente = v_jorge AND f.estado_pago = 'PAGADO' AND f.fecha_cobro BETWEEN DATE '2026-09-01' AND DATE '2026-09-30'
+     ORDER BY f.id_factura LIMIT 1;
+    UPDATE facturas SET estado_pago = 'CANCELADO' WHERE id_factura = v_fac;
+    IF (SELECT monto FROM ajustes_comision WHERE id_factura = v_fac AND id_periodo_origen = v_per) IS DISTINCT FROM ROUND(-v_num * 0.03, 2) THEN
+        RAISE EXCEPTION 'RN-A4-08 falló: ajuste por cancelación = % (esperado %)',
+            (SELECT monto FROM ajustes_comision WHERE id_factura = v_fac), ROUND(-v_num * 0.03, 2);
+    END IF;
+    -- Una factura cancelada que nunca se cobró no genera ajuste
+    SELECT id_factura INTO v_fac FROM facturas WHERE estado_pago = 'PENDIENTE' ORDER BY id_factura DESC LIMIT 1;
+    UPDATE facturas SET estado_pago = 'CANCELADO' WHERE id_factura = v_fac;
+    IF EXISTS (SELECT 1 FROM ajustes_comision WHERE id_factura = v_fac AND motivo LIKE 'Cancelación%') THEN RAISE EXCEPTION 'RN-A4-08 falló: ajuste sin comisión pagada'; END IF;
 
     RAISE NOTICE 'Pruebas del área 4: todas pasaron';
 END $$;

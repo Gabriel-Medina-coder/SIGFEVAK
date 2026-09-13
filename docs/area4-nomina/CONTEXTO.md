@@ -444,7 +444,7 @@ flowchart TD
 | **RN-A4-05** | Si un agente no tiene esquema, se usa la tasa fija `agentes_ventas.comision` del modelo base como respaldo, y se registra en bitácora como excepción. | `fn_calcular_periodo` |
 | **RN-A4-06** | La comisión se calcula sobre ventas **cobradas** (`estado_pago = 'PAGADO'`), sin IVA, del mes de cobro, y la tasa del tramo alcanzado se aplica a toda la base, no sólo al excedente. | `v_ventas_cobradas_agente` + `fn_calcular_periodo` |
 | **RN-A4-07** | Una factura facturada pero no cobrada no genera comisión; pasa al periodo en que se cobre. | Derivado de RN-A4-06 |
-| **RN-A4-08** | Una factura ya comisionada que se cancela genera un `ajuste_comision` negativo que se aplica en el siguiente periodo, sin exceder el tope de descuento del art. 110 LFT; el excedente se difiere. | `fn_aplicar_ajustes` |
+| **RN-A4-08** | Una factura ya comisionada que se cancela genera un `ajuste_comision` negativo que se aplica en el siguiente periodo, sin exceder el tope de descuento del art. 110 LFT; el excedente se difiere. | Trigger `fn_ajuste_por_cancelacion` en `facturas` + `fn_aplicar_ajustes` |
 | **RN-A4-09** | Los bonos se calculan; un bono capturado a mano exige `autorizado_por` y queda en bitácora. | CHECK en `bonos_asignados` + trigger |
 | **RN-A4-10** | Todo concepto de nómina lleva `integra_sbc`. Comisiones y bonos integran; el premio de puntualidad no integra hasta el 10% del SBC, el excedente sí. | `bonos_catalogo` + `fn_calcular_nomina` |
 | **RN-A4-11** | La parte variable del SBC se promedia por bimestre para el reporte al IMSS. | Vista `v_sbc_bimestral` |
