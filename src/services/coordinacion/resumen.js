@@ -15,6 +15,7 @@ export async function obtenerResumenGeneral() {
     fiscal,
     calendario,
     nomina,
+    ultimaRetencion,
     campanas,
     facturacion,
     pendientes,
@@ -48,6 +49,13 @@ export async function obtenerResumenGeneral() {
       .from('v_nomina_totales')
       .select('id_periodo, id_agente, nombre, percepciones, deducciones, neto')
       .then(lanzar),
+    // Último periodo autorizado por fecha (el id no sigue el calendario cuando se capturan periodos atrasados)
+    supabase
+      .from('v_retenciones_area5')
+      .select('id_periodo, fecha_fin')
+      .order('fecha_fin', { ascending: false })
+      .limit(1)
+      .then(lanzar),
     supabase
       .from('v_campana_resumen')
       .select('nombre, estatus, gasto_total, presupuesto_asignado, roi')
@@ -60,7 +68,7 @@ export async function obtenerResumenGeneral() {
   ]);
 
   const suma = (lista, campo) => lista.reduce((acc, r) => acc + Number(r[campo] ?? 0), 0);
-  const ultimoPeriodo = Math.max(0, ...nomina.map((n) => n.id_periodo));
+  const ultimoPeriodo = ultimaRetencion[0]?.id_periodo;
   const nominaUltima = nomina.filter((n) => n.id_periodo === ultimoPeriodo);
 
   const volumenPorPeriodo = Object.values(
