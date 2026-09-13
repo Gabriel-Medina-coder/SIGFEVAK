@@ -1226,14 +1226,17 @@ Sigue la plantilla global `docs/plantillas/REPORTE_FINAL_LIDER.md`:
 
 Un agente o integrante que se tope con alguna de estas **no decide por su cuenta**: la registra y la escala al líder.
 
-1. **Municipio sede.** El documento original dice "el ayuntamiento correspondiente" sin nombrarlo. ¿Tuxtla Gutiérrez, Tapachula u otro? Define costos de uso de suelo y licencia de funcionamiento del seed.
-2. **Pagos provisionales de ISR.** ¿Se estiman con coeficiente de utilidad (`COEFICIENTE_UTILIDAD` en parámetros) o el contador captura el monto a mano cada mes? Recomendación: captura manual con el coeficiente como sugerencia.
-3. **IVA acreditable.** Para la obligación de IVA hace falta el IVA de las compras. ¿Lo publica el área 1 desde `entradas_producto.impuestos_unitarios`, o se captura a mano? Hoy el ejemplo 10.1 lo captura a mano.
-4. **Recargos y actualizaciones** por pago extemporáneo: ¿se calculan (parámetro `RECARGO_MENSUAL`) o solo se registra el monto pagado con recargo incluido?
-5. **`pg_cron`.** ¿Está habilitado en el proyecto de Supabase? Si no, las tres funciones diarias se disparan con el botón de administración.
-6. **Cuotas compensatorias y otras contribuciones** en la base del IVA de importación: hoy la base es valor en aduana + IGI + DTA. ¿Se agrega un campo `otras_contribuciones`?
-7. **Manifestación de Valor E2**: ¿aplica a todas las importaciones del seed o solo a algunas? Determina si `numero_e2` es obligatorio por tipo.
-8. **Políticas RLS por rol**: ¿se implementan en los 5 días o basta la política mínima con la validación en trigger?
+1. **Cerrada (#96).** Municipio sede: Tuxtla Gutiérrez. Las licencias del seed y la institución "Ayuntamiento de Tuxtla Gutiérrez" lo usan.
+2. **Cerrada (#91).** Pagos provisionales de ISR: captura manual del contador; `fn_generar_obligaciones_periodo` los crea sin monto y el seed muestra la sugerencia con `COEFICIENTE_UTILIDAD` (0.085, por confirmar con contabilidad).
+3. **Cerrada (#84, #91).** IVA acreditable: `fn_generar_obligaciones_periodo` precarga el IVA trasladado de `v_iva_trasladado_periodo`; el contador captura el acreditable y ajusta `monto_estimado` a mano, como en el ejemplo 10.1. Publicarlo desde el Área 1 queda como fase 2.
+4. **Cerrada (#96).** Recargos: `RECARGO_MENSUAL` (1.47 %) está cargado como parámetro; en esta versión solo se registra el monto pagado con recargo incluido, no se calcula.
+5. **Cerrada (#86).** `pg_cron` no se usa; las tres funciones diarias (`fn_generar_alertas`, `fn_marcar_vencidas`, `fn_actualizar_estado_licencias`) se disparan desde el botón de administración de la pantalla del área.
+6. **Cerrada (#94).** Cuotas compensatorias: la base del IVA de importación es valor en aduana + IGI + DTA; no se agrega `otras_contribuciones` en esta versión.
+7. **Cerrada (#96).** `numero_e2` es opcional; en el seed solo la primera importación lo tiene.
+8. **Cerrada (#88).** Política mínima para `authenticated` sin `DELETE` en obligaciones, pagos y documentos; la separación de funciones y el rol AUTORIZADOR se validan en el trigger (RN-A5-06, RN-A5-18).
+9. **Tasas de IGI por fracción.** Las cinco fracciones del seed llevan 0.15 (la tasa del ejemplo 10.2) mientras el responsable de comercio exterior las confirma en la TIGIE vigente; se cambian en `parametros_fiscales` sin tocar código.
+
+Columnas agregadas durante la construcción: `parametros_fiscales.fuente` (origen del valor) y `v_obligaciones_pendientes.id_responsable`. La tabla `impuestos_licencias` del modelo base la crea la primera migración del área.
 
 ---
 
