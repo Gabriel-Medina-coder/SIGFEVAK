@@ -12,25 +12,25 @@ Orden por día (5 días, domingo 13 a jueves 17): dom 13 arranque, acuerdos I-01
 
 | # | Título | Tipo | Nivel | Estimación | Depende de | Persona sugerida | RN | Issue |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Integración con el área 1: fórmula de capital con flete, impuestos y tipo de cambio (I-01) | tipo:integracion | nivel:medio | S | — | Líder | RN-A3-05, RN-A3-08 | # |
-| 2 | Integración con el área 6: la migración base no crea `marketing` ni `clientes_marketing`; baja lógica `activo` en `productos` (I-09) | tipo:integracion | nivel:inicial | S | — | Líder | RN-A3-09 | # |
-| 3 | Integración con el área 2: qué pasa con el stock al cancelar una factura (I-11, pregunta abierta 3) | tipo:integracion | nivel:medio | S | — | Líder | RN-A3-06, RN-A3-07 | # |
-| 4 | Migración de tablas del área y RLS: `productos`, `entradas_producto`, `ajustes_inventario` con sus CHECK, columna generada, índices y políticas — `buena-primera-tarea` | tipo:bd | nivel:medio | M | 2 | Modelador/DBA | RN-A3-01, RN-A3-02, RN-A3-04, RN-A3-05, RN-A3-09 | # |
-| 5 | Triggers de entrada, salida y ajuste (`fn_entrada_producto`, `fn_salida_producto`, `fn_ajuste_inventario`) con la fórmula acordada en I-01 | tipo:bd | nivel:avanzado | L | 1, 4 | Modelador/DBA | RN-A3-01, RN-A3-05, RN-A3-06, RN-A3-07, RN-A3-08 | # |
-| 6 | Vistas del área: `v_inventario_actual`, `v_kardex`, `v_rotacion`, `v_discrepancias` | tipo:bd | nivel:medio | M | 5 | Consultas y reportes | RN-A3-05, RN-A3-07 | # |
-| 7 | Vista de contrato `v_entradas_area1` con la fórmula de I-01; firma publicada en `docs/MODELO_DATOS.md` | tipo:bd | nivel:medio | S | 1, 6 | Consultas y reportes | RN-A3-08 | # |
-| 8 | Vista de contrato `v_salidas_area2`; firma publicada en `docs/MODELO_DATOS.md` | tipo:bd | nivel:inicial | S | 6 | Consultas y reportes | — | # |
-| 9 | Seed `seed_area3.sql` (20 productos y 10 movimientos, idempotente) y verificación de `supabase db reset` limpio sin escrituras directas a `stock` | tipo:pruebas | nivel:inicial | M | 5 | Captura y catálogos | RN-A3-04, RN-A3-06 | # |
-| 10 | Pruebas SQL en `supabase/tests/area3/`: stock no negativo, cantidad positiva, entrada, salida y ajuste | tipo:pruebas | nivel:medio | M | 5, 9 | Modelador/DBA | RN-A3-01, RN-A3-04, RN-A3-05, RN-A3-07, RN-A3-08 | # |
-| 11 | Módulo del área en la app compartida: `src/modules/area3-inventario/` y ruta "Base de Productos" en el menú — `buena-primera-tarea` | tipo:frontend | nivel:inicial | S | app base de coordinación | Consultas y reportes | — | # |
-| 12 | Servicios `src/services/area3/inventario.js` y manejo centralizado de errores de Postgres a mensajes legibles | tipo:frontend | nivel:medio | M | 11, 6 | Consultas y reportes | RN-A3-01, RN-A3-04, RN-A3-06 | # |
-| 13 | Pantalla de catálogo (KPI, tabla desde `v_inventario_actual`, etiquetas de estado) con alta y edición de producto | tipo:frontend | nivel:medio | M | 12 | Consultas y reportes + Captura y catálogos | RN-A3-01, RN-A3-05, RN-A3-06 | # |
-| 14 | Formulario de entrada de producto: producto, cantidad, costo, proveedor, documento; el trigger hace el resto | tipo:frontend | nivel:medio | M | 12, 5 | Captura y catálogos | RN-A3-04, RN-A3-06 | # |
-| 15 | Pantalla de kardex por producto desde `v_kardex`, con filtro de fechas | tipo:frontend | nivel:medio | M | 12, 6 | Consultas y reportes | RN-A3-08 | # |
-| 16 | Pantalla de conciliación: conteo físico contra stock del sistema y registro del ajuste con motivo y responsable | tipo:frontend | nivel:avanzado | M | 12, 5 | Captura y catálogos | RN-A3-07 | # |
-| 17 | Reportes de discrepancias (`v_discrepancias`) y rotación (`v_rotacion`) | tipo:frontend | nivel:inicial | S | 15 | Consultas y reportes | RN-A3-07 | # |
-| 18 | Pruebas de punta a punta con las áreas 1 y 2 y validación de los cinco reportes contra el seed, con evidencias | tipo:pruebas | nivel:medio | M | 7, 8, 10, 13 a 17 | Líder + Consultas y reportes | RN-A3-01, RN-A3-03, RN-A3-05, RN-A3-08 | # |
-| 19 | Cierre: contexto actualizado con los acuerdos de I-01, I-09 e I-11, evidencias por issue, `ESTADO.md` diario, reporte final y evaluación final del equipo | tipo:docs | nivel:inicial | M | todo | Líder + Documentación y enlace | — | # |
+| 1 | Integración con el área 1: fórmula de capital con flete, impuestos y tipo de cambio (I-01) | tipo:integracion | nivel:medio | S | — | Líder | RN-A3-05, RN-A3-08 | #1 |
+| 2 | Integración con el área 6: la migración base no crea `marketing` ni `clientes_marketing`; baja lógica `activo` en `productos` (I-09) | tipo:integracion | nivel:inicial | S | — | Líder | RN-A3-09 | #2 |
+| 3 | Integración con el área 2: qué pasa con el stock al cancelar una factura (I-11, pregunta abierta 3) | tipo:integracion | nivel:medio | S | — | Líder | RN-A3-06, RN-A3-07 | #3 |
+| 4 | Migración de tablas del área y RLS: `productos`, `entradas_producto`, `ajustes_inventario` con sus CHECK, columna generada, índices y políticas — `buena-primera-tarea` | tipo:bd | nivel:medio | M | 2 | Modelador/DBA | RN-A3-01, RN-A3-02, RN-A3-04, RN-A3-05, RN-A3-09 | #4 |
+| 5 | Triggers de entrada, salida y ajuste (`fn_entrada_producto`, `fn_salida_producto`, `fn_ajuste_inventario`) con la fórmula acordada en I-01 | tipo:bd | nivel:avanzado | L | 1, 4 | Modelador/DBA | RN-A3-01, RN-A3-05, RN-A3-06, RN-A3-07, RN-A3-08 | #5 |
+| 6 | Vistas del área: `v_inventario_actual`, `v_kardex`, `v_rotacion`, `v_discrepancias` | tipo:bd | nivel:medio | M | 5 | Consultas y reportes | RN-A3-05, RN-A3-07 | #6 |
+| 7 | Vista de contrato `v_entradas_area1` con la fórmula de I-01; firma publicada en `docs/MODELO_DATOS.md` | tipo:bd | nivel:medio | S | 1, 6 | Consultas y reportes | RN-A3-08 | #7 |
+| 8 | Vista de contrato `v_salidas_area2`; firma publicada en `docs/MODELO_DATOS.md` | tipo:bd | nivel:inicial | S | 6 | Consultas y reportes | — | #8 |
+| 9 | Seed `seed_area3.sql` (20 productos y 10 movimientos, idempotente) y verificación de `supabase db reset` limpio sin escrituras directas a `stock` | tipo:pruebas | nivel:inicial | M | 5 | Captura y catálogos | RN-A3-04, RN-A3-06 | #9 |
+| 10 | Pruebas SQL en `supabase/tests/area3/`: stock no negativo, cantidad positiva, entrada, salida y ajuste | tipo:pruebas | nivel:medio | M | 5, 9 | Modelador/DBA | RN-A3-01, RN-A3-04, RN-A3-05, RN-A3-07, RN-A3-08 | #10 |
+| 11 | Módulo del área en la app compartida: `src/modules/area3-inventario/` y ruta "Base de Productos" en el menú — `buena-primera-tarea` | tipo:frontend | nivel:inicial | S | app base de coordinación | Consultas y reportes | — | #11 |
+| 12 | Servicios `src/services/area3/inventario.js` y manejo centralizado de errores de Postgres a mensajes legibles | tipo:frontend | nivel:medio | M | 11, 6 | Consultas y reportes | RN-A3-01, RN-A3-04, RN-A3-06 | #12 |
+| 13 | Pantalla de catálogo (KPI, tabla desde `v_inventario_actual`, etiquetas de estado) con alta y edición de producto | tipo:frontend | nivel:medio | M | 12 | Consultas y reportes + Captura y catálogos | RN-A3-01, RN-A3-05, RN-A3-06 | #13 |
+| 14 | Formulario de entrada de producto: producto, cantidad, costo, proveedor, documento; el trigger hace el resto | tipo:frontend | nivel:medio | M | 12, 5 | Captura y catálogos | RN-A3-04, RN-A3-06 | #14 |
+| 15 | Pantalla de kardex por producto desde `v_kardex`, con filtro de fechas | tipo:frontend | nivel:medio | M | 12, 6 | Consultas y reportes | RN-A3-08 | #15 |
+| 16 | Pantalla de conciliación: conteo físico contra stock del sistema y registro del ajuste con motivo y responsable | tipo:frontend | nivel:avanzado | M | 12, 5 | Captura y catálogos | RN-A3-07 | #16 |
+| 17 | Reportes de discrepancias (`v_discrepancias`) y rotación (`v_rotacion`) | tipo:frontend | nivel:inicial | S | 15 | Consultas y reportes | RN-A3-07 | #17 |
+| 18 | Pruebas de punta a punta con las áreas 1 y 2 y validación de los cinco reportes contra el seed, con evidencias | tipo:pruebas | nivel:medio | M | 7, 8, 10, 13 a 17 | Líder + Consultas y reportes | RN-A3-01, RN-A3-03, RN-A3-05, RN-A3-08 | #18 |
+| 19 | Cierre: contexto actualizado con los acuerdos de I-01, I-09 e I-11, evidencias por issue, `ESTADO.md` diario, reporte final y evaluación final del equipo | tipo:docs | nivel:inicial | M | todo | Líder + Documentación y enlace | — | #19 |
 
 ## Integraciones que este equipo necesita de otras áreas
 
