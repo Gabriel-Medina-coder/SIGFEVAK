@@ -14,7 +14,7 @@ paths:
 - Solo JavaScript: archivos `.js` y `.jsx`. Nunca crees `.ts` ni `.tsx`; si copias código de la referencia o de Figma Make, quita las anotaciones de tipos.
 - Funciones en español y descriptivas: `registrarEntrada`, `obtenerKardex`, `calcularISN`. Componentes en `PascalCase`, archivo `NombreComponente.jsx`.
 - Validación de formularios con Zod antes de mandar a Supabase; la validación de negocio real vive en la base.
-- Prettier y ESLint del repo; corre `pnpm lint` antes de proponer un PR.
+- Prettier y oxlint del repo; corre `pnpm lint` antes de proponer un PR.
 - Instala con `pnpm add`, nunca con `npm`. Justifica toda dependencia nueva en el PR.
 - Si una consulta regresa vacío teniendo datos, revisa RLS antes que cualquier otra cosa.
 

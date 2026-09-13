@@ -104,9 +104,9 @@ Estas decisiones son del grupo de líderes + coordinador. Sin ellas los equipos 
 | Estado global | Ninguno de inicio | El estado vive en cada módulo; se agrega Zustand solo si un área lo justifica en un PR |
 | Runtime | Node 20 LTS | Requerido por Vite y Supabase CLI; se fija en `.nvmrc` y `engines` |
 | Bloqueo de npm | `.npmrc` con `engine-strict=true` y `packageManager: "pnpm@9"` en `package.json`; solo `pnpm-lock.yaml` en el repo | npm falla al instalar y un `package-lock.json` en un PR se rechaza |
-| Formato y lint | Prettier + ESLint, obligatorios en CI | Un solo estilo para 31 personas |
+| Formato y lint | Prettier + oxlint (el linter de la plantilla oficial de Vite), obligatorios en CI | Un solo estilo para 31 personas |
 | Pruebas | SQL de prueba para triggers y funciones (por área, en `supabase/tests/`); frontend manual con captura en el PR | Lo crítico es la base; en 5 días no hay tiempo para pruebas de UI automatizadas |
-| CI (GitHub Actions) | `lint.yml` (prettier + eslint) y `sql-lint.yml` (nombre de migración y que no se edite una aplicada) | Lo mínimo que evita PRs rotos |
+| CI (GitHub Actions) | `lint.yml` (prettier + oxlint) y `sql-lint.yml` (nombre de migración y que no se edite una aplicada) | Lo mínimo que evita PRs rotos |
 | Despliegue | Local con `pnpm dev` para la presentación | Opcional Vercel para el frontend si sobra tiempo; la base ya está en la nube |
 | Diagramas | Mermaid dentro de los markdown | GitHub los renderiza sin herramienta externa |
 | Editor | VS Code con extensiones recomendadas en `.vscode/extensions.json` | Prettier, ESLint, Tailwind, Mermaid |
@@ -543,7 +543,7 @@ Prefijos válidos: `area1` … `area6`, `docs`, `coord`, `fix`, `ci`.
 
 ### 8.3 JavaScript / React
 
-- Prettier + ESLint con la configuración del repo. El CI falla si no está formateado.
+- Prettier + oxlint con la configuración del repo. El CI falla si no está formateado.
 - Gestor de paquetes único: pnpm o bun según S-11. **Nunca npm.** Un solo lockfile en el repo; si aparece un `package-lock.json` en un PR, se rechaza.
 - Un solo cliente Supabase en `src/lib/supabaseClient.js`.
 - El acceso a datos va en `src/services/areaN/*.js`. Los componentes React **no** llaman a `supabase.from()` directamente.

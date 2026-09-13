@@ -86,7 +86,7 @@ Principios:
 | Migraciones | Supabase CLI |
 | Autenticación | Supabase Auth con roles en tabla `usuarios` |
 | Paquetes | **pnpm** (npm bloqueado por `.npmrc`) |
-| Calidad | Prettier · ESLint · GitHub Actions (lint, validación de migraciones) |
+| Calidad | Prettier · oxlint · GitHub Actions (lint, validación de migraciones) |
 | Diseño | Tema oscuro definido en [`docs/GUIA_ESTILO.md`](docs/GUIA_ESTILO.md), derivado de la referencia en `docs/referencia-ui/` |
 
 El detalle y el porqué de cada elección están en [`docs/DECISIONES.md`](docs/DECISIONES.md).

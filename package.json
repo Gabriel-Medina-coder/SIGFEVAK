@@ -1,0 +1,36 @@
+{
+  "name": "sigfevak",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Sistema de gestión para una comercializadora mexicana de productos electrónicos y manufactura nacional",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "prettier --check \"src/**/*.{js,jsx,css}\" && oxlint src",
+    "format": "prettier --write \"src/**/*.{js,jsx,css}\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "prettier": "^3.4.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^8.3.0"
+  }
+}

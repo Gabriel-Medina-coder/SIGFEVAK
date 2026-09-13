@@ -71,7 +71,7 @@ src/
 ## Convenciones de código
 
 - Base de datos: `minusculas_con_guion_bajo`, tablas en plural, llaves en singular (`id_producto`). Enums como tipos PostgreSQL. Cada función y trigger lleva comentario con la RN que implementa. RLS activado en toda tabla.
-- JavaScript en todo el repo (`.js` y `.jsx`; nunca `.ts` ni `.tsx`). Prettier + ESLint del repo. Un solo cliente Supabase en `src/lib/supabaseClient.js`. Los componentes React no llaman a `supabase.from()`; eso va en `src/services/areaN/`. Funciones en español: `registrarEntrada`, `obtenerKardex`, `calcularISN`. Componentes en `PascalCase`.
+- JavaScript en todo el repo (`.js` y `.jsx`; nunca `.ts` ni `.tsx`). Prettier + oxlint del repo (`pnpm lint`). Un solo cliente Supabase en `src/lib/supabaseClient.js`. Los componentes React no llaman a `supabase.from()`; eso va en `src/services/areaN/`. Funciones en español: `registrarEntrada`, `obtenerKardex`, `calcularISN`. Componentes en `PascalCase`.
 - Nada de SQL crudo desde el frontend; consultas con `supabase-js` y vistas para reportes.
 
 ## Comandos
@@ -79,7 +79,7 @@ src/
 ```text
 pnpm install            instalar dependencias (nunca npm install)
 pnpm dev                levantar el frontend
-pnpm lint               prettier + eslint
+pnpm lint               prettier + oxlint
 supabase db push        aplicar migraciones al proyecto
 supabase db reset       recrear la base local desde cero con migraciones y seed
 ```

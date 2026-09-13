@@ -26,8 +26,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         if: steps.app.outputs.existe == 'true'
-        with:
-          version: 9
+        # La versión de pnpm se toma del campo packageManager de package.json
 
       - uses: actions/setup-node@v4
         if: steps.app.outputs.existe == 'true'

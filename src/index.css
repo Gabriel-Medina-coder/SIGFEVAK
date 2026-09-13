@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-bg: #0d0d0d;
+  --color-surface: #161616;
+  --color-surface-2: #1e1e1e;
+  --color-border: #2a2a2a;
+  --color-muted: #555555;
+  --color-text: #e8e8e8;
+  --color-text-dim: #888888;
+  --color-accent: #f0a500;
+  --color-accent-dim: rgba(240, 165, 0, 0.12);
+  --color-up: #3ecf8e;
+  --color-down: #f87171;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #0d0d0d;
+  color: #e8e8e8;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
