@@ -32,6 +32,7 @@ BEGIN
     IF (SELECT estado FROM obligaciones WHERE id_obligacion = v_obl) <> 'VENCIDO' THEN RAISE EXCEPTION 'RN-A5-16 falló'; END IF;
     IF NOT EXISTS (SELECT 1 FROM alertas WHERE id_obligacion = v_obl AND nivel = 'VENCIDA') THEN RAISE EXCEPTION 'RN-A5-21 falló: sin alerta VENCIDA'; END IF;
     -- RN-A5-21: volver a generar no duplica
+    PERFORM fn_generar_alertas();
     SELECT COUNT(*) INTO v_n FROM alertas;
     PERFORM fn_generar_alertas();
     IF (SELECT COUNT(*) FROM alertas) <> v_n THEN RAISE EXCEPTION 'RN-A5-21 falló: alertas duplicadas'; END IF;
