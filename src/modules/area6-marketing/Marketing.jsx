@@ -217,6 +217,12 @@ function IndicadoresBreves({ campanas }) {
   );
 }
 
+// RN-A6-12: el ROI estimado sale de las métricas; sin ingreso atribuido capturado no hay ROI que mostrar
+// (en las DIRECTO el ROI real se ve en su detalle, desde las facturas pagadas)
+function roiEstimado(c) {
+  return c.roi === null || Number(c.ingreso_atribuido ?? 0) === 0 ? null : Number(c.roi);
+}
+
 function Tablero({ campanas }) {
   const [rango, setRango] = useState({ desde: '', hasta: '' });
   const canales = useDatos(listarCostosPorCanal);
@@ -228,9 +234,9 @@ function Tablero({ campanas }) {
   const suma = (campo) => filtradas.reduce((a, c) => a + Number(c[campo] ?? 0), 0);
   const presupuesto = suma('presupuesto_asignado');
   const gasto = suma('gasto_total');
-  const conRoi = filtradas.filter((c) => c.roi !== null);
+  const conRoi = filtradas.filter((c) => roiEstimado(c) !== null);
   const roiPromedio = conRoi.length
-    ? conRoi.reduce((a, c) => a + Number(c.roi), 0) / conRoi.length
+    ? conRoi.reduce((a, c) => a + roiEstimado(c), 0) / conRoi.length
     : null;
 
   return (
@@ -291,7 +297,7 @@ function Tablero({ campanas }) {
         <KpiCard
           label="ROI promedio"
           value={roiPromedio === null ? '—' : `${roiPromedio.toFixed(2)}x`}
-          delta={`${conRoi.length} con gasto`}
+          delta={`${conRoi.length} con métricas`}
           up={roiPromedio === null || roiPromedio >= 0}
         />
       </FilaKpi>
@@ -344,8 +350,8 @@ function Recientes({ campanas, onAbrir }) {
             <Mono>{pesos(c.presupuesto_asignado)}</Mono>,
             <Mono color="up">{pesos(c.gasto_total)}</Mono>,
             <Mono bold>{miles(c.conversiones)}</Mono>,
-            <Mono color={c.roi === null ? 'dim' : Number(c.roi) >= 0 ? 'up' : 'down'}>
-              {c.roi === null ? '—' : `${Number(c.roi).toFixed(2)}x`}
+            <Mono color={roiEstimado(c) === null ? 'dim' : roiEstimado(c) >= 0 ? 'up' : 'down'}>
+              {roiEstimado(c) === null ? '—' : `${roiEstimado(c).toFixed(2)}x`}
             </Mono>,
             <StatusBadge status={c.estatus} map={COLOR_CAMPANA} />,
           ])}
@@ -443,8 +449,11 @@ function Campanas({ campanas, onAbrir }) {
             </Mono>,
             <Mono>{porcentaje(c.pct_ejercido)}</Mono>,
             <Mono>{miles(c.leads_generados)}</Mono>,
-            <Mono bold color={c.roi === null ? 'dim' : Number(c.roi) >= 0 ? 'up' : 'down'}>
-              {c.roi === null ? '—' : `${Number(c.roi).toFixed(2)}x`}
+            <Mono
+              bold
+              color={roiEstimado(c) === null ? 'dim' : roiEstimado(c) >= 0 ? 'up' : 'down'}
+            >
+              {roiEstimado(c) === null ? '—' : `${roiEstimado(c).toFixed(2)}x`}
             </Mono>,
             <StatusBadge status={c.estatus} map={COLOR_CAMPANA} />,
           ])}
