@@ -11,3 +11,7 @@ Capturas del recorrido de punta a punta grabado en la app real el 13 sep 2026. E
 - [historia-34-clientes-objetivo.png](historia-34-clientes-objetivo.png)
 - [historia-35-costo-excede-presupuesto.png](historia-35-costo-excede-presupuesto.png)
 - [historia-36-roi-real.png](historia-36-roi-real.png)
+
+## Integración y aceptación
+
+- [issue-39-produccion-y-bajo-stock.png](issue-39-produccion-y-bajo-stock.png): producción en camino y productos bajo stock mínimo en el tablero

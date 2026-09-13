@@ -56,6 +56,8 @@ import {
   listarClientesActivos,
   listarProductos,
   listarBajaRotacion,
+  listarProduccionProyectada,
+  listarBajoStockMinimo,
 } from '@/services/area6/referencias';
 
 const COLOR_CAMPANA = {
@@ -226,6 +228,10 @@ function roiEstimado(c) {
 function Tablero({ campanas }) {
   const [rango, setRango] = useState({ desde: '', hasta: '' });
   const canales = useDatos(listarCostosPorCanal);
+  const abasto = useDatos(() =>
+    Promise.all([listarProduccionProyectada(), listarBajoStockMinimo()])
+  );
+  const [produccion, bajoStock] = abasto.datos ?? [[], []];
   const filtradas = campanas.filter(
     (c) =>
       (!rango.desde || c.fecha_inicio >= rango.desde) &&
@@ -320,6 +326,32 @@ function Tablero({ campanas }) {
           </>
         )}
       </Panel>
+      <div className="grid grid-cols-2 gap-4 max-[960px]:grid-cols-1">
+        <Panel title="Producción en camino (Entradas)">
+          <Table
+            headers={['Orden', 'Producto', 'Unidades', 'Estado']}
+            vacio="Sin órdenes planeadas ni en proceso"
+            rows={produccion.map((o) => [
+              <Mono>{o.folio}</Mono>,
+              <Texto bold>{o.producto}</Texto>,
+              <Mono>{miles(o.cantidad_planeada)}</Mono>,
+              <Tag color="accent">{o.estado.toLowerCase().replace('_', ' ')}</Tag>,
+            ])}
+          />
+        </Panel>
+        <Panel title="No promocionar todavía: bajo stock mínimo">
+          <Table
+            headers={['Producto', 'Stock', 'Mínimo', 'Faltan']}
+            vacio="Todo el catálogo está sobre su mínimo"
+            rows={bajoStock.map((p) => [
+              <Texto bold>{p.nombre}</Texto>,
+              <Mono color="down">{miles(p.stock)}</Mono>,
+              <Mono color="dim">{miles(p.stock_minimo)}</Mono>,
+              <Mono bold>{miles(p.faltante)}</Mono>,
+            ])}
+          />
+        </Panel>
+      </div>
     </>
   );
 }

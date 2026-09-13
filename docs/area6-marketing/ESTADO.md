@@ -21,10 +21,11 @@
 - [x] #115 `v_ventas_atribuidas_campana` sobre facturas pagadas (Diego, César) · main 2026-09-13
 - [x] #116 `v_directo_desempeno` y `v_productos_baja_rotacion_campana` (Diego, César) · main 2026-09-13
 - [x] #117 Pruebas SQL del área (Diego, César) · main 2026-09-13
+- [x] #118 a #125 Módulo, servicios, tablero, campañas con detalle por pestañas, costos, catálogos, investigación y prueba de punta a punta con capturas (Diego, César) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #118 a #124 Módulo, servicios, tablero, campañas con detalle por pestañas, costos, catálogos e investigación (Diego, César) · construidos, en prueba en navegador
+- Nada
 
 ## Bloqueado
 
@@ -32,7 +33,7 @@
 
 ## Próximo
 
-- #125 punta a punta con capturas, #126 cierre
+- #126 cierre del área: reporte final, evaluación y ensayo de la demostración (líder)
 
 ## Bitácora
 
@@ -45,6 +46,7 @@
 - Decisión: RLS mínima; `fn_a6_usuario_tiene_rol` queda lista para el endurecimiento por rol si se decide (pregunta abierta 8).
 - Preguntas abiertas 1 a 8 cerradas en la sección 16 del contexto.
 - Módulo construido en `src/modules/area6-marketing/` con servicios en `src/services/area6/`: tablero con gasto por canal, campañas con pestañas de costos, métricas, clientes objetivo y productos, costos globales con totales por mes, investigación y catálogos solo para ADMINISTRADOR. Consultas verificadas con sesión real. Falta la prueba en navegador para cerrar los issues.
+- El tablero muestra la producción en camino (`v_ordenes_produccion`) y los productos bajo stock mínimo (`v_reabastecimiento`) del área 1 para no promocionar sin inventario (#39).
 
 ### Lun 14 sep · Base de datos
 
