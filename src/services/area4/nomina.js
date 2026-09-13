@@ -119,3 +119,11 @@ export async function obtenerDesempeno(periodo) {
 export async function obtenerRetenciones(id_periodo) {
   return supabase.from('v_retenciones_area5').select('*').eq('id_periodo', id_periodo).then(datos);
 }
+
+// I-06: mano de obra directa por orden terminada que publica el área 1; insumo futuro de bonos de productividad,
+// solo lectura y sin cambiar el cálculo actual (tarea 3 del área)
+export async function obtenerManoObraProduccion(periodo) {
+  let q = supabase.from('v_mano_obra_produccion').select('*');
+  if (periodo) q = q.eq('periodo', periodo);
+  return q.order('fecha_fin_real', { ascending: false }).then(datos);
+}

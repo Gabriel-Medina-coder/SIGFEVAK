@@ -49,6 +49,7 @@ import {
   obtenerRecibo,
   obtenerDesempeno,
   obtenerRetenciones,
+  obtenerManoObraProduccion,
   recalcularNomina,
 } from '@/services/area4/nomina';
 import {
@@ -602,11 +603,12 @@ function Reportes({ periodos }) {
             obtenerTotales(periodo.id_periodo),
             obtenerDesempeno(periodoDe(periodo)),
             obtenerRetenciones(periodo.id_periodo),
+            obtenerManoObraProduccion(periodoDe(periodo)),
           ])
-        : Promise.resolve([[], [], []]),
+        : Promise.resolve([[], [], [], []]),
     [periodo?.id_periodo]
   );
-  const [totales, desempeno, retenciones] = datos.datos ?? [[], [], []];
+  const [totales, desempeno, retenciones, manoObra] = datos.datos ?? [[], [], [], []];
   const porAgente = useMemo(
     () => Object.fromEntries(totales.map((t) => [t.id_agente, t])),
     [totales]
@@ -683,6 +685,19 @@ function Reportes({ periodos }) {
                 <Mono bold color="accent">
                   {pesos(r.isn_estimado, { centavos: true })}
                 </Mono>,
+              ])}
+            />
+          </Panel>
+          <Panel title="Mano de obra de producción del periodo (Entradas, insumo de bonos de productividad)">
+            <Table
+              headers={['Orden', 'Responsable', 'Terminada', 'Unidades', 'Mano de obra']}
+              vacio="Sin órdenes de producción terminadas en el periodo"
+              rows={manoObra.map((m) => [
+                <Mono>{m.folio}</Mono>,
+                <Texto bold>{m.responsable}</Texto>,
+                <Mono color="dim">{fechaCorta(m.fecha_fin_real)}</Mono>,
+                <Mono>{miles(m.cantidad_terminada)}</Mono>,
+                <Mono bold>{pesos(m.costo_mano_obra, { centavos: true })}</Mono>,
               ])}
             />
           </Panel>
