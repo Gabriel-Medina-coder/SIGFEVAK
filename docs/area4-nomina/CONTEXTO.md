@@ -884,14 +884,18 @@ Sigue la plantilla global `docs/plantillas/REPORTE_FINAL_LIDER.md`, con estas se
 
 Un agente o integrante que se tope con alguna de estas **no decide por su cuenta**: la registra y la escala al líder.
 
-1. **`fecha_cobro` en `facturas`.** El área 2 debe agregarla. Mientras no exista, `v_ventas_cobradas_agente` usa `fecha` como aproximación y el cálculo es por mes de facturación, no de cobro. Resolver el día 1.
-2. **Cartera vencida.** Para el bono de cobranza sana se necesita saber qué facturas están vencidas. Requiere `fecha_vencimiento` o días de crédito en `facturas`. Si el área 2 no lo tiene, el bono se calcula con una bandera manual por agente.
-3. **Devoluciones.** El área 3 no tiene tabla de devoluciones. Se usa `estado_pago = 'CANCELADO'` como único disparador de ajuste. ¿Es suficiente?
-4. **INFONAVIT.** ¿Se captura el factor de descuento por agente o se omite del alcance?
-5. **Tarifa ISR.** ¿Se carga la tabla mensual completa del art. 96 en JSONB, o se simplifica a un porcentaje fijo para la demostración? Recomendación: tabla completa, es una sola inserción.
-6. **Tope del art. 110 LFT** para descuentos por ajuste: ¿30% del excedente del salario mínimo? El analista lo confirma y lo carga como `TOPE_DESCUENTO_110`.
-7. **Bono trimestral.** Con 5 días no habrá tres periodos reales. ¿Se demuestra con seed de tres meses o se deja documentado sin ejecutar?
-8. **Quincenas.** ¿Se generan las dos quincenas del mes automáticamente al abrir un periodo mensual?
+1. **Cerrada (#61, I-02).** `facturas.fecha_cobro` existe desde la migración del Área 2; `v_ventas_cobradas_agente` calcula por mes de cobro.
+2. **Cerrada (#61, I-02).** `facturas.fecha_vencimiento` existe y el Área 2 publica `v_cartera_agente`; el bono de cobranza sana se calcula con `pct_vencida < 5`.
+3. **Cerrada (#61, I-11).** `estado_pago = CANCELADO` es el único disparador de un `ajuste_comision`; una devolución de mercancía es un ajuste de inventario del Área 3 y no toca comisiones en esta versión.
+4. **Cerrada (#77).** INFONAVIT queda fuera del alcance: no se captura factor por agente ni se descuenta. Fase 2.
+5. **Cerrada (#66).** Se cargó la tabla mensual completa del art. 96 (Anexo 8 RMF) en `parametros_legales` como JSONB. Pendiente confirmar contra el Anexo 8 publicado para 2026; si cambia, se inserta un registro nuevo con vigencia.
+6. **Cerrada (#66).** `TOPE_DESCUENTO_110 = 0.30` del excedente del salario mínimo mensual, cargado en `parametros_legales`; `fn_aplicar_ajustes` difiere lo que no cabe.
+7. **Cerrada (#76).** Implementado en `fn_calcular_periodo` (promedio de los tres meses que terminan en el periodo, solo con las tres metas) y documentado sin ejecutar: el seed tiene un solo mes.
+8. **Cerrada (#76).** En esta versión solo se calculan periodos `MENSUAL`: el sueldo del mes (`salario_diario × 30.4`) entra al periodo mensual junto con comisiones y bonos, que es lo que reproduce el ejemplo de la sección 10. Las quincenas quedan como fase 2 (`fn_calcular_periodo` las rechaza con RN-A4-17).
+9. **Tope exento del premio de puntualidad.** RN-A4-12 lo deja "hasta el tope de UMA aplicable" sin cifra. Se cargó `TOPE_EXENTO_PUNTUALIDAD_UMAS = 1` (una UMA mensual) en `parametros_legales`; el analista lo confirma o lo cambia ahí.
+10. **Cuota obrera IMSS.** Se cargó `CUOTA_IMSS_OBRERO = 0.0238` (suma de ramos obreros 2.375 % redondeada a 4 decimales) sobre la base que integra SBC; falta el ramo de excedente de 3 UMA y el tope de 25 UMA. Fase 2.
+
+Columnas agregadas durante la construcción, además de las de la sección 5: `metas.sin_retardos` (bandera manual del premio de puntualidad, sección 3), `parametros_legales.fuente` (origen del valor) y `v_retenciones_area5.isn_estimado` (base × tasa de la entidad, RN-A4-16).
 
 ---
 
