@@ -1,6 +1,6 @@
 ## Issue
 
-Cierra #
+Closes #
 
 ## Área
 

@@ -12,7 +12,7 @@ Revisa el pull request #$pr como lo haría el líder del área. Primero analiza;
 2. Identifica el área por la etiqueta o por la rama `areaN/...`. Lee `docs/areaN-*/CONTEXTO.md`.
 3. Verifica y reporta cada punto como ✅, ⚠️ o ❌ con una línea de explicación:
    - **Alcance:** todos los archivos dentro de las carpetas del área. Archivos compartidos (`src/lib`, `src/components`, `App.jsx`, `.github`, `docs/*.md` de raíz) requieren al coordinador.
-   - **Issue enlazado:** la descripción dice `Cierra #nn` y el issue es del área.
+   - **Issue enlazado:** la descripción dice `Closes #nn` y el issue es del área.
    - **Reglas RN:** el PR cita las RN que implementa y el código las respeta. Si toca stock, comisiones, obligaciones o cálculos fiscales, compara contra la sección de reglas del `CONTEXTO.md`.
    - **Migraciones:** ninguna migración existente fue editada; las nuevas siguen el nombre `AAAAMMDD_HHMM_aN_*.sql` y llevan encabezado; toda tabla nueva activa RLS.
    - **Frontend:** ningún componente llama a `supabase.from()` directo; no hay SQL crudo; no hay cliente Supabase nuevo.

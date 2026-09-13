@@ -151,7 +151,7 @@ Si usas Claude Code, al abrir el repo se cargan automáticamente las reglas y la
 
 ## Flujo de trabajo
 
-La coordinación construye las seis áreas por bloques, con el líder de cada área como coautor de los commits de su área. Cada bloque va en una rama, un commit con `Cierra #nn`, merge a `main` y push. Los líderes e integrantes contribuyen por pull request cuando quieran. Detalle en [`CONTRIBUTING.md`](CONTRIBUTING.md).
+La coordinación construye las seis áreas por bloques, con el líder de cada área como coautor de los commits de su área. Cada bloque va en una rama, un commit con `Closes #nn`, merge a `main` y push. Los líderes e integrantes contribuyen por pull request cuando quieran. Detalle en [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Convenciones
 

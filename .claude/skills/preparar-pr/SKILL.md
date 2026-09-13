@@ -14,7 +14,7 @@ Prepara la rama actual y abre el pull request. Haz las verificaciones en orden y
 5. **Migraciones.** Si el diff modifica una migración que ya existía en `main`, es ❌; no continúes.
 6. **Secretos.** Si el diff incluye `.env` o cadenas que parezcan llaves (`eyJ...`, `sk_...`, `service_role`), es ❌; no continúes.
 7. **Prefijo de commits.** Cada commit de la rama empieza con `areaN:`, `docs:`, `coord:`, `fix:`, `ci:` o `chore:`.
-8. **Descripción.** Lee `.github/PULL_REQUEST_TEMPLATE.md` y redacta el cuerpo del PR llenando cada sección con lo que ves en el diff: `Cierra #nn`, área, qué se hizo, reglas RN implementadas, cómo se probó. En "Evidencia" pregunta a la persona qué captura o salida adjunta; si no tiene, deja el marcador `<!-- pendiente: adjuntar evidencia -->` y díselo.
+8. **Descripción.** Lee `.github/PULL_REQUEST_TEMPLATE.md` y redacta el cuerpo del PR llenando cada sección con lo que ves en el diff: `Closes #nn`, área, qué se hizo, reglas RN implementadas, cómo se probó. En "Evidencia" pregunta a la persona qué captura o salida adjunta; si no tiene, deja el marcador `<!-- pendiente: adjuntar evidencia -->` y díselo.
 9. **Push y PR.** Solo si todo lo anterior es ✅:
    - `git push -u origin <rama>`
    - `gh pr create --base main --repo Gabriel-Medina-coder/SIGFEVAK --title "<título del issue>" --body-file <archivo temporal con el cuerpo>`

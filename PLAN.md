@@ -429,7 +429,7 @@ SIGFEVAK/
 
 ## 6. Flujo de trabajo en GitHub
 
-> **Modo vigente desde el 13 de septiembre.** La coordinación construye las seis áreas con cada líder como coautor de los commits de su área. Ramas por bloque, un commit por bloque con `Cierra #nn`, merge a `main` en local y push. Sin pull request obligatorio. La coordinación puede crear, asignar y cerrar issues, aprobar y mergear PRs de cualquier área y subir a `main`. Los líderes e integrantes contribuyen por PR cuando quieran. Lo que sigue en esta sección es el flujo de PR para esas contribuciones.
+> **Modo vigente desde el 13 de septiembre.** La coordinación construye las seis áreas con cada líder como coautor de los commits de su área. Ramas por bloque, un commit por bloque con `Closes #nn`, merge a `main` en local y push. Sin pull request obligatorio. La coordinación puede crear, asignar y cerrar issues, aprobar y mergear PRs de cualquier área y subir a `main`. Los líderes e integrantes contribuyen por PR cuando quieran. Lo que sigue en esta sección es el flujo de PR para esas contribuciones.
 
 ### 6.1 Ramas
 

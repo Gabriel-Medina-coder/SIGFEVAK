@@ -7,7 +7,7 @@ La coordinación construye las seis áreas con el respaldo de cada líder, que a
 Reglas del flujo:
 
 - **Una rama por bloque de trabajo**, con el prefijo del área: `area3/base`, `area3/pantallas`, `coord/app-base`.
-- **Un commit por bloque**, en español, con el formato `areaN: verbo objeto (RN-AN-xx) #issue`. Si el commit cierra un issue, el mensaje lleva `Cierra #nn`; GitHub lo cierra al llegar a `main`.
+- **Un commit por bloque**, en español, con el formato `areaN: verbo objeto (RN-AN-xx) #issue`. Si el commit cierra un issue, el mensaje lleva `Closes #nn`; GitHub lo cierra al llegar a `main`.
 - **Coautoría por área.** Los commits de un área llevan al líder de esa área como coautor: `Co-Authored-By: Nombre <correo>`. Solo personas; nunca herramientas.
 - **Merge a `main` en local** y push. No hace falta pull request para el trabajo de coordinación; el historial por bloques es la trazabilidad.
 - **La coordinación puede todo**: crear, asignar y cerrar issues, revisar, aprobar y mergear pull requests de cualquier área, y subir a `main`.
