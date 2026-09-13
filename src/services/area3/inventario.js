@@ -36,11 +36,22 @@ export async function editarProducto(id_producto, { nombre, tipo, sku, stock_min
     .then(datos);
 }
 
+export const LIMITE_KARDEX_GENERAL = 300;
+
+// Con producto: su kardex completo en orden cronológico. Sin producto: solo los movimientos más recientes,
+// porque la API corta en 1000 filas y con dos años de operación se perderían los últimos.
 export async function obtenerKardex({ idProducto, desde, hasta } = {}) {
   let q = supabase.from('v_kardex').select('*');
   if (idProducto) q = q.eq('id_producto', idProducto);
   if (desde) q = q.gte('fecha', desde);
   if (hasta) q = q.lte('fecha', hasta);
+  if (!idProducto) {
+    const recientes = await q
+      .order('fecha', { ascending: false })
+      .limit(LIMITE_KARDEX_GENERAL)
+      .then(datos);
+    return recientes.reverse();
+  }
   return q.order('fecha', { ascending: true }).then(datos);
 }
 

@@ -31,6 +31,7 @@ import {
   crearProducto,
   editarProducto,
   obtenerKardex,
+  LIMITE_KARDEX_GENERAL,
   obtenerRotacion,
   obtenerDiscrepancias,
   registrarAjuste,
@@ -413,6 +414,14 @@ function Kardex({ productos }) {
         </RejillaForm>
       </div>
       {k.error && <Mensaje>{mensajeDeError(k.error)}</Mensaje>}
+      {!filtro.idProducto && (
+        <div className="mb-4">
+          <Texto dim>
+            Sin producto se muestran los últimos {LIMITE_KARDEX_GENERAL} movimientos. Elige uno para
+            ver su kardex completo.
+          </Texto>
+        </div>
+      )}
       {k.cargando ? (
         <Cargando />
       ) : (
