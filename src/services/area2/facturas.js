@@ -4,12 +4,14 @@ import { datos, uno, limpiar } from '@/lib/consulta';
 // Área 2 · Facturas. Ningún servicio manda subtotal, iva, valor_total, fecha_cobro ni folio (RN-A2-02, RN-A2-08,
 // RN-A2-11): los escriben los triggers. El stock lo descuenta el trigger del área 3 (RN-A2-06).
 
+// Más recientes primero por fecha: con facturas capturadas tarde, el id no sigue el calendario
 export async function listarFacturas() {
   return supabase
     .from('facturas')
     .select(
       'id_factura, folio, fecha, fecha_vencimiento, fecha_cobro, subtotal, iva, valor_total, estado_pago, uuid_cfdi, clientes(id_cliente, nombre_empresa, numero_comercializador), agentes_ventas(id_agente, nombre)'
     )
+    .order('fecha', { ascending: false })
     .order('id_factura', { ascending: false })
     .then(datos);
 }
