@@ -1,0 +1,38 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Solo pnpm. Si aparece alguno de estos, alguien usó npm o yarn.
+package-lock.json
+yarn.lock
+bun.lockb
+
+# Build
+dist/
+build/
+.vite/
+
+# Variables de entorno: solo se sube .env.example
+.env
+.env.*
+!.env.example
+
+# Supabase local
+supabase/.branches
+supabase/.temp
+supabase/.env
+
+# Configuración personal de herramientas de IA (la compartida sí se sube)
+CLAUDE.local.md
+.claude/settings.local.json
+.cursor/
+.windsurf/
+
+# Editor y sistema
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+*.log

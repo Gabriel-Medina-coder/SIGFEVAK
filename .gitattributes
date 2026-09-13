@@ -1,0 +1,7 @@
+# Finales de línea LF en todo el repo; los hooks de bash no corren con CRLF.
+* text=auto eol=lf
+*.sh text eol=lf
+.githooks/* text eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary

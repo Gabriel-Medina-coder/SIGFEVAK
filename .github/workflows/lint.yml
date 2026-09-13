@@ -1,0 +1,44 @@
+name: lint
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rechazar lockfiles de otros gestores
+        run: |
+          if [ -f package-lock.json ] || [ -f yarn.lock ] || [ -f bun.lockb ]; then
+            echo "::error::Solo se permite pnpm-lock.yaml. Elimina package-lock.json / yarn.lock / bun.lockb."
+            exit 1
+          fi
+
+      - name: ¿Existe package.json?
+        id: app
+        run: |
+          if [ -f package.json ]; then echo "existe=true" >> "$GITHUB_OUTPUT"; else echo "existe=false" >> "$GITHUB_OUTPUT"; echo "Aún no hay package.json; se omite lint."; fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.app.outputs.existe == 'true'
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        if: steps.app.outputs.existe == 'true'
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Instalar dependencias
+        if: steps.app.outputs.existe == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint y formato
+        if: steps.app.outputs.existe == 'true'
+        run: pnpm lint

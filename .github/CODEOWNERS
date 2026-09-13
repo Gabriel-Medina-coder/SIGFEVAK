@@ -1,0 +1,71 @@
+# Dueños por carpeta. GitHub exige la aprobación del dueño en cada PR que toque su ruta.
+# Líderes: 1 Viviana @vivisahe · 2 Eduardo @JEMB1432 · 3 Davor @davz7 · 4 Fernando @gabyFredy · 5 Ivan @AngelIvanOC · 6 César @Gabriel-Medina-coder (dueño del repo).
+# Sustituir @AngelIvanOC cuando Ivan acepte la invitación.
+# El último patrón que coincide gana, así que lo compartido va al final.
+# @diegoveme (coordinación) está en todas las rutas de área para poder revisar cuando el líder no alcance;
+# basta la aprobación de uno de los dueños listados. Lo compartido lo aprueban coordinación o el dueño del repo.
+
+# Área 1 · Entradas y manufactura
+/docs/area1-entradas/                 @vivisahe @diegoveme
+/src/services/area1/                  @vivisahe @diegoveme
+/src/modules/area1-entradas/          @vivisahe @diegoveme
+/supabase/migrations/*_a1_*.sql       @vivisahe @diegoveme
+/supabase/seed/seed_area1.sql         @vivisahe @diegoveme
+/supabase/tests/area1/                @vivisahe @diegoveme
+
+# Área 2 · Contabilidad y facturación
+/docs/area2-contabilidad/             @JEMB1432 @diegoveme
+/src/services/area2/                  @JEMB1432 @diegoveme
+/src/modules/area2-contabilidad/      @JEMB1432 @diegoveme
+/supabase/migrations/*_a2_*.sql       @JEMB1432 @diegoveme
+/supabase/seed/seed_area2.sql         @JEMB1432 @diegoveme
+/supabase/tests/area2/                @JEMB1432 @diegoveme
+
+# Área 3 · Inventario
+/docs/area3-inventario/               @davz7 @diegoveme
+/src/services/area3/                  @davz7 @diegoveme
+/src/modules/area3-inventario/        @davz7 @diegoveme
+/supabase/migrations/*_a3_*.sql       @davz7 @diegoveme
+/supabase/seed/seed_area3.sql         @davz7 @diegoveme
+/supabase/tests/area3/                @davz7 @diegoveme
+
+# Área 4 · Nómina de agentes
+/docs/area4-nomina/                   @gabyFredy @diegoveme
+/src/services/area4/                  @gabyFredy @diegoveme
+/src/modules/area4-nomina/            @gabyFredy @diegoveme
+/supabase/migrations/*_a4_*.sql       @gabyFredy @diegoveme
+/supabase/seed/seed_area4.sql         @gabyFredy @diegoveme
+/supabase/tests/area4/                @gabyFredy @diegoveme
+
+# Área 5 · Fiscal y permisos
+/docs/area5-fiscal/                   @AngelIvanOC @diegoveme
+/src/services/area5/                  @AngelIvanOC @diegoveme
+/src/modules/area5-fiscal/            @AngelIvanOC @diegoveme
+/supabase/migrations/*_a5_*.sql       @AngelIvanOC @diegoveme
+/supabase/seed/seed_area5.sql         @AngelIvanOC @diegoveme
+/supabase/tests/area5/                @AngelIvanOC @diegoveme
+
+# Área 6 · Marketing
+/docs/area6-marketing/                @Gabriel-Medina-coder @diegoveme
+/src/services/area6/                  @Gabriel-Medina-coder @diegoveme
+/src/modules/area6-marketing/         @Gabriel-Medina-coder @diegoveme
+/supabase/migrations/*_a6_*.sql       @Gabriel-Medina-coder @diegoveme
+/supabase/seed/seed_area6.sql         @Gabriel-Medina-coder @diegoveme
+/supabase/tests/area6/                @Gabriel-Medina-coder @diegoveme
+
+# Compartido · coordinador
+/.github/                             @diegoveme @Gabriel-Medina-coder
+/.claude/                             @diegoveme @Gabriel-Medina-coder
+/CLAUDE.md                            @diegoveme @Gabriel-Medina-coder
+/AGENTS.md                            @diegoveme @Gabriel-Medina-coder
+/PLAN.md                              @diegoveme @Gabriel-Medina-coder
+/README.md                            @diegoveme @Gabriel-Medina-coder
+/CONTRIBUTING.md                      @diegoveme @Gabriel-Medina-coder
+/docs/*.md                            @diegoveme @Gabriel-Medina-coder
+/docs/plantillas/                     @diegoveme @Gabriel-Medina-coder
+/src/lib/                             @diegoveme @Gabriel-Medina-coder
+/src/components/                      @diegoveme @Gabriel-Medina-coder
+/src/App.jsx                          @diegoveme @Gabriel-Medina-coder
+/supabase/migrations/*_a00_*.sql      @diegoveme @Gabriel-Medina-coder
+/package.json                         @diegoveme @Gabriel-Medina-coder
+/pnpm-lock.yaml                       @diegoveme @Gabriel-Medina-coder

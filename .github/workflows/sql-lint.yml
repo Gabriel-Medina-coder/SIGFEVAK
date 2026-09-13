@@ -1,0 +1,53 @@
+name: sql-lint
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "supabase/**"
+
+jobs:
+  migraciones:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Nombre de migraciones
+        run: |
+          set -e
+          bad=0
+          for f in supabase/migrations/*.sql; do
+            [ -e "$f" ] || continue
+            name=$(basename "$f")
+            if ! echo "$name" | grep -Eq '^[0-9]{8}_[0-9]{4}_a(0[0-9]|[1-6])_[a-z0-9_]+\.sql$'; then
+              echo "::error file=$f::Nombre inválido. Formato: AAAAMMDD_HHMM_aN_descripcion.sql"
+              bad=1
+            fi
+            if ! head -n 3 "$f" | grep -q '^-- Área'; then
+              echo "::error file=$f::Falta el encabezado '-- Área N · Issue #nn · RN-AN-xx'"
+              bad=1
+            fi
+          done
+          exit $bad
+
+      - name: Migraciones existentes no se editan
+        run: |
+          set -e
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+          modified=$(git diff --name-only --diff-filter=MD "$base" "$head" -- 'supabase/migrations/*.sql' || true)
+          if [ -n "$modified" ]; then
+            echo "::error::Se modificó o borró una migración existente. Crea una migración nueva en su lugar:"
+            echo "$modified"
+            exit 1
+          fi
+
+      - name: Sin escritura directa a productos.stock
+        run: |
+          set -e
+          if grep -rEin "update\s+productos\s+set\s+stock" supabase/migrations supabase/seed 2>/dev/null | grep -viE "fn_(entrada|salida|ajuste)"; then
+            echo "::error::Hay un UPDATE directo a productos.stock fuera de los triggers del área 3 (RN-A3-06)."
+            exit 1
+          fi

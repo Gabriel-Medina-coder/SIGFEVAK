@@ -1,0 +1,66 @@
+name: Integración entre áreas
+description: Una área necesita algo de otra (una columna, una vista, un cambio de trigger)
+title: "[integración] areaN → areaM: "
+labels: ["tipo:integracion", "necesita-decision"]
+body:
+  - type: dropdown
+    id: area_pide
+    attributes:
+      label: Área que pide
+      options:
+        - area:1-entradas
+        - area:2-contabilidad
+        - area:3-inventario
+        - area:4-nomina
+        - area:5-fiscal
+        - area:6-marketing
+    validations:
+      required: true
+  - type: dropdown
+    id: area_dueña
+    attributes:
+      label: Área dueña de lo que se pide
+      options:
+        - area:1-entradas
+        - area:2-contabilidad
+        - area:3-inventario
+        - area:4-nomina
+        - area:5-fiscal
+        - area:6-marketing
+    validations:
+      required: true
+  - type: textarea
+    id: que_necesita
+    attributes:
+      label: Qué se necesita exactamente
+      description: Tabla, columna, vista o cambio de comportamiento, con tipo de dato y regla
+      placeholder: "Columna fecha_cobro DATE NULL en facturas, para calcular comisiones por mes de cobro (RN-A4-06)"
+    validations:
+      required: true
+  - type: textarea
+    id: por_que
+    attributes:
+      label: Por qué
+      description: Qué regla o flujo del área que pide lo requiere
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Propuesta de solución
+      description: Debe ser aditiva. No se modifican ni quitan columnas existentes.
+    validations:
+      required: true
+  - type: input
+    id: fecha_limite
+    attributes:
+      label: Para cuándo se necesita
+      placeholder: "Sáb 13 sep"
+  - type: checkboxes
+    id: acuerdo
+    attributes:
+      label: Acuerdo
+      description: Ambos líderes marcan su casilla en un comentario antes de que alguien lo implemente
+      options:
+        - label: Líder del área que pide está de acuerdo
+        - label: Líder del área dueña está de acuerdo

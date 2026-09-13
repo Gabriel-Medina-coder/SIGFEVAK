@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Hook de git (commit-msg). Aplica a cualquier herramienta: terminal, VS Code, Cursor, Copilot.
+# Se activa una sola vez por clon con:  git config core.hooksPath .githooks
+# Regla D-08 de PLAN.md: cero rastro de IA en el historial. Coautores humanos permitidos.
+
+msg_file="$1"
+
+if grep -qiE 'generated with|anthropic|copilot|chatgpt|openai|cursor|claude|🤖' "$msg_file"; then
+  echo "ERROR (regla D-08): el mensaje de commit contiene rastro de herramientas de IA."
+  echo "Quita 'Generated with', enlaces de sesión o nombres de herramientas. Los coautores humanos sí se permiten."
+  echo "Formato esperado:  areaN: verbo objeto (RN-AN-xx) #issue"
+  exit 1
+fi
+
+# Formato mínimo del primer renglón: prefijo válido.
+first_line="$(head -n 1 "$msg_file")"
+if ! printf '%s' "$first_line" | grep -qE '^(area[1-6]|docs|coord|fix|ci|chore): '; then
+  echo "ERROR: el mensaje debe empezar con un prefijo válido: area1..area6, docs, coord, fix, ci, chore."
+  echo "Ejemplo:  area3: agrega trigger de conciliación (RN-A3-07) #42"
+  exit 1
+fi
+
+exit 0

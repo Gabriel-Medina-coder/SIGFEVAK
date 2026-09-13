@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Duda general del proyecto
+    url: https://github.com/Gabriel-Medina-coder/SIGFEVAK/discussions
+    about: Para preguntas que no son una tarea ni un bug, usa Discussions o pregunta a tu líder.

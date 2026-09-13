@@ -1,0 +1,53 @@
+name: Bug
+description: Algo que ya está en main no funciona como dice el CONTEXTO.md
+title: "[areaN] bug: "
+labels: ["tipo:bug", "estado:disponible"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - area:1-entradas
+        - area:2-contabilidad
+        - area:3-inventario
+        - area:4-nomina
+        - area:5-fiscal
+        - area:6-marketing
+        - area:transversal
+    validations:
+      required: true
+  - type: textarea
+    id: que_pasa
+    attributes:
+      label: Qué pasa
+      description: Comportamiento actual, con el error exacto si lo hay
+    validations:
+      required: true
+  - type: textarea
+    id: que_deberia
+    attributes:
+      label: Qué debería pasar
+      description: Cita la regla RN o la sección del CONTEXTO.md que se incumple
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Pasos para reproducir
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options:
+        - prioridad:alta
+        - prioridad:media
+        - prioridad:baja
+    validations:
+      required: true

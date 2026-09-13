@@ -1,0 +1,93 @@
+name: Tarea
+description: Tarea normal de un área (BD, backend, frontend, docs o pruebas)
+title: "[areaN] "
+labels: ["estado:disponible"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - area:1-entradas
+        - area:2-contabilidad
+        - area:3-inventario
+        - area:4-nomina
+        - area:5-fiscal
+        - area:6-marketing
+        - area:transversal
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options:
+        - tipo:bd
+        - tipo:backend
+        - tipo:frontend
+        - tipo:docs
+        - tipo:pruebas
+    validations:
+      required: true
+  - type: dropdown
+    id: nivel
+    attributes:
+      label: Nivel de dificultad
+      description: Para que cada quien elija según su experiencia
+      options:
+        - nivel:inicial
+        - nivel:medio
+        - nivel:avanzado
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options:
+        - prioridad:alta
+        - prioridad:media
+        - prioridad:baja
+    validations:
+      required: true
+  - type: input
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: En una frase, qué debe existir cuando esto se cierre
+      placeholder: "Crear el trigger que descuenta stock al insertar un renglón de factura"
+    validations:
+      required: true
+  - type: input
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Sección del CONTEXTO.md del área que aplica
+      placeholder: "docs/area3-inventario/CONTEXTO.md sección 8, RN-A3-01"
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Lista verificable. El issue se cierra solo cuando todos están marcados.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: input
+    id: archivos
+    attributes:
+      label: Archivos que se espera tocar
+      placeholder: "supabase/migrations/..._a3_trigger_salida.sql, supabase/tests/area3/salida.sql"
+  - type: input
+    id: reglas
+    attributes:
+      label: Reglas de negocio involucradas
+      placeholder: "RN-A3-01, RN-A3-04"
+  - type: input
+    id: depende
+    attributes:
+      label: Depende de
+      placeholder: "#12, #15"
