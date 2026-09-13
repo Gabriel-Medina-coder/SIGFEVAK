@@ -14,7 +14,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "prettier --check \"src/**/*.{js,jsx,css}\" && oxlint src",
-    "format": "prettier --write \"src/**/*.{js,jsx,css}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,css}\"",
+    "test": "node --test \"tests/unidad/*.test.js\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.0",
