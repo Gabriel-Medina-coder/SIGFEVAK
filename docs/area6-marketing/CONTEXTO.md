@@ -922,9 +922,9 @@ RN-A6-03: el gasto total 52500.00 excede el presupuesto asignado 50000.00 de la 
 
 La fila no se guarda; el resumen sigue en $45,000. Para aceptarlo hay que subir `presupuesto_asignado` a $52,500 o más (edición autorizada) y volver a intentar.
 
-### Caso B · Campaña DIRECTO "Promo revendedores septiembre"
+### Caso B · Campaña DIRECTO "Promo revendedores agosto"
 
-Presupuesto $15,000. Cinco clientes objetivo contactados por WhatsApp y llamada.
+Presupuesto $15,000, vigencia del 1 al 31 de agosto de 2026. Cinco clientes objetivo contactados por WhatsApp, llamada y correo.
 
 | Cliente | Canal | Estado de contacto |
 | --- | --- | --- |
@@ -941,14 +941,14 @@ Presupuesto $15,000. Cinco clientes objetivo contactados por WhatsApp y llamada.
 | `total_convertidos` | 2 |
 | `tasa_conversion_pct` | 40.00 |
 
-Con dos costos ($8,200 de mensajería y $3,000 de llamadas: gasto $11,200) y dos facturas `PAGADO` de los clientes convertidos dentro de la vigencia por $189,500 y $95,200 con IVA (subtotales $163,362.07 y $82,068.97):
+Con dos costos ($8,200 de mensajería y $3,000 de llamadas: gasto $11,200) y las facturas `PAGADO` de los cinco clientes objetivo con fecha dentro de agosto en el seed del área 2 (Elektra $147,200, TechMex $429,000, Norte Digital $72,000, Distribuidora Bajío $65,000 y RadioShack $58,000, subtotales sin IVA), como define RN-A6-14:
 
 | Resultado en `v_ventas_atribuidas_campana` | Valor |
 | --- | --- |
-| `facturas_atribuidas` | 2 |
-| `ventas_atribuidas_sin_iva` | $245,431.04 |
+| `facturas_atribuidas` | 5 |
+| `ventas_atribuidas_sin_iva` | $771,200.00 |
 | `gasto_total` | $11,200.00 |
-| `roi_real` = (245,431.04 − 11,200) / 11,200 | 20.9135 |
+| `roi_real` = (771,200 − 11,200) / 11,200 | 67.8571 |
 
 Intentar agregar un cliente objetivo a la campaña del caso A (`EXTERNO`) falla con `RN-A6-02`. Intentar activar una campaña `DIRECTO` sin clientes falla con `RN-A6-15`.
 
@@ -1056,14 +1056,14 @@ Sigue la plantilla global `docs/plantillas/REPORTE_FINAL_LIDER.md`:
 
 Un agente o integrante que se tope con alguna de estas **no decide por su cuenta**: la registra y la escala al líder. Las cinco del contrato del equipo, con lo que ya quedó respondido, más las nuevas.
 
-1. **Contrato de datos con el área 2.** *Respondida:* `clientes.id_cliente` es `INT` con identidad; el área 2 usa baja lógica con `activo`. Queda por confirmar el día 1 que `clientes` tendrá la columna `activo` (I-10).
-2. **Integración con facturación real.** *Respondida parcialmente:* `costos_marketing.id_factura` es FK real y opcional. Falta decidir si la pantalla de costos permite seleccionar la factura del proveedor o solo capturar el número.
+1. **Cerrada (#106, I-10).** `clientes.activo` existe desde la migración del Área 2 y `v_clientes_activos` está publicada; `campana_clientes` referencia `clientes(id_cliente)`.
+2. **Cerrada (#109).** `costos_marketing.id_factura` es FK real y opcional; la pantalla de costos permite elegir una factura existente o dejarla vacía. No se captura número libre.
 3. **Gobierno del catálogo de roles.** *Respondida:* tabla `usuarios` del coordinador con enum `rol_usuario`; el área 6 usa `MARKETING` y `ADMINISTRADOR`.
-4. **Vínculo con el área 4.** ¿El responsable de una campaña debe ligarse también a `agentes_ventas` para medir desempeño de agentes en campañas? Hoy es solo `usuarios`. Escalar al líder del área 4.
-5. **Retención y auditoría fiscal.** ¿Cuánto tiempo deben conservarse costos e investigaciones por obligaciones ante el SAT? Escalar al líder del área 5.
-6. **Vigencia para ventas atribuidas.** Cuando `fecha_fin` es nula, la vista atribuye hasta hoy. ¿Debe haber una ventana máxima (por ejemplo 90 días) para no atribuir indefinidamente?
-7. **Moneda distinta de MXN.** `moneda` existe en campañas y costos, pero no hay tipo de cambio. ¿Se restringe a MXN en esta fase?
-8. **Endurecimiento de RLS.** ¿Se aplica el día 4 o se deja la política mínima para la demostración?
+4. **Cerrada (#107, I-05).** El responsable de campaña sigue siendo un usuario; el desempeño de agentes se lee de `v_desempeno_agente_zona` del Área 4 sin ligar campañas a `agentes_ventas` en esta versión.
+5. **Cerrada (#109).** No hay borrado físico de costos ni investigaciones con historial (RN-A6-04, RN-A6-16); el plazo legal de conservación lo define el Área 5 y no afecta al modelo.
+6. **Cerrada (#115).** Sin ventana máxima en esta versión: con `fecha_fin` nula la vista atribuye hasta hoy. La campaña del caso B tiene `fecha_fin`.
+7. **Cerrada (#109).** Solo MXN en esta fase; la columna `moneda` queda con su default y no hay tipo de cambio.
+8. **Cerrada (#110).** Se deja la política mínima para la demostración; `fn_a6_usuario_tiene_rol` ya existe para aplicar las políticas por rol de la sección 8 cuando se decida.
 
 ---
 
