@@ -49,6 +49,7 @@ import {
   obtenerRecibo,
   obtenerDesempeno,
   obtenerRetenciones,
+  recalcularNomina,
 } from '@/services/area4/nomina';
 import {
   listarAgentes,
@@ -388,6 +389,22 @@ function DetallePeriodo({ periodo, usuario, onCambio }) {
             </Boton>
           </>
         )}
+        {periodo.estatus === 'REVISADO' &&
+          puede('revisar') &&
+          (totales.datos ?? []).length > 0 &&
+          (totales.datos ?? []).every((x) => Number(x.deducciones) === 0) && (
+            <Boton
+              disabled={enviando}
+              onClick={() =>
+                ejecutar(
+                  () => recalcularNomina(periodo.id_periodo),
+                  'ISR, IMSS y ajustes recalculados.'
+                )
+              }
+            >
+              Recalcular deducciones
+            </Boton>
+          )}
         {periodo.estatus === 'REVISADO' && puede('autorizar') && (
           <Boton
             variante="primario"

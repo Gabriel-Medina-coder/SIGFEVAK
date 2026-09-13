@@ -52,6 +52,12 @@ export async function revisarPeriodo(id_periodo, correo) {
   if (error) throw error;
 }
 
+// Reintento del cálculo de ISR, IMSS y ajustes para un periodo ya REVISADO
+export async function recalcularNomina(id_periodo) {
+  const { error } = await supabase.rpc('fn_calcular_nomina', { p_id_periodo: id_periodo });
+  if (error) throw error;
+}
+
 // RN-A4-13: regresar a ABIERTO exige comentario
 export async function rechazarPeriodo(id_periodo, correo, comentario) {
   return supabase
