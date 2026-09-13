@@ -1,19 +1,61 @@
 import { supabase } from '@/lib/supabaseClient';
 import { datos, uno, limpiar } from '@/lib/consulta';
+import { periodoActual } from '@/lib/formato';
 
 // Área 2 · Facturas. Ningún servicio manda subtotal, iva, valor_total, fecha_cobro ni folio (RN-A2-02, RN-A2-08,
 // RN-A2-11): los escriben los triggers. El stock lo descuenta el trigger del área 3 (RN-A2-06).
 
-// Más recientes primero por fecha: con facturas capturadas tarde, el id no sigue el calendario
+const COLUMNAS_FACTURA =
+  'id_factura, folio, fecha, fecha_vencimiento, fecha_cobro, subtotal, iva, valor_total, estado_pago, uuid_cfdi, clientes(id_cliente, nombre_empresa, numero_comercializador), agentes_ventas(id_agente, nombre)';
+
+// Todas las facturas, más recientes primero. Solo para exportar (con muchos datos, la tabla usa paginaFacturas).
 export async function listarFacturas() {
   return supabase
     .from('facturas')
-    .select(
-      'id_factura, folio, fecha, fecha_vencimiento, fecha_cobro, subtotal, iva, valor_total, estado_pago, uuid_cfdi, clientes(id_cliente, nombre_empresa, numero_comercializador), agentes_ventas(id_agente, nombre)'
-    )
+    .select(COLUMNAS_FACTURA)
     .order('fecha', { ascending: false })
     .order('id_factura', { ascending: false })
     .then(datos);
+}
+
+// Una página de facturas desde el servidor, para no traer miles de filas al cliente. Devuelve { filas, total }.
+export async function paginaFacturas({ pagina = 0, porPagina = 25 } = {}) {
+  const desde = pagina * porPagina;
+  const { data, count, error } = await supabase
+    .from('facturas')
+    .select(COLUMNAS_FACTURA, { count: 'exact' })
+    .order('fecha', { ascending: false })
+    .order('id_factura', { ascending: false })
+    .range(desde, desde + porPagina - 1);
+  if (error) throw error;
+  return { filas: data ?? [], total: count ?? 0 };
+}
+
+// Cifras del tablero sin traer todas las facturas: facturación del mes (con IVA) y cuántas están por cobrar.
+export async function resumenFacturacion() {
+  const [mes, pendientes] = await Promise.all([
+    supabase
+      .from('v_iva_trasladado_periodo')
+      .select('total, numero_facturas')
+      .eq('periodo', periodoActual())
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (error) throw error;
+        return data;
+      }),
+    supabase
+      .from('v_facturas_pendientes')
+      .select('id_factura', { count: 'exact', head: true })
+      .then(({ count, error }) => {
+        if (error) throw error;
+        return count ?? 0;
+      }),
+  ]);
+  return {
+    mesTotal: Number(mes?.total ?? 0),
+    mesFacturas: Number(mes?.numero_facturas ?? 0),
+    pendientes,
+  };
 }
 
 export async function obtenerFactura(id_factura) {

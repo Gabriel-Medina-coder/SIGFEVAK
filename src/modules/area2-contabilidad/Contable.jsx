@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 import {
   KpiCard,
@@ -36,6 +36,8 @@ import {
 } from '@/services/area2/clientes';
 import {
   listarFacturas,
+  paginaFacturas,
+  resumenFacturacion,
   obtenerFactura,
   listarAgentes,
   listarProductosVenta,
@@ -82,18 +84,23 @@ export default function Contable() {
   const { set } = useTopbar();
   const [pestana, setPestana] = useState('facturas');
   const [modal, setModal] = useState(null);
-  const facturas = useDatos(listarFacturas);
+  const [pagina, setPagina] = useState(0);
+  const PORPAGINA = 25;
+  const facturas = useDatos(() => paginaFacturas({ pagina, porPagina: PORPAGINA }), [pagina]);
+  const resumen = useDatos(resumenFacturacion);
   const clientes = useDatos(listarClientesResumen);
+
+  // El export baja todas las facturas al momento (la tabla solo trae la página visible).
+  const exportarTodo = useCallback(async () => {
+    const todas = await listarFacturas();
+    exportarCsv('facturas', todas.map(aplanarFactura));
+  }, []);
 
   useEffect(() => {
     set({
       acciones: (
         <>
-          <Boton
-            onClick={() => exportarCsv('facturas', (facturas.datos ?? []).map(aplanarFactura))}
-          >
-            Exportar
-          </Boton>
+          <Boton onClick={exportarTodo}>Exportar</Boton>
           {escribe && (
             <Boton variante="primario" onClick={() => setModal({ tipo: 'nueva' })}>
               + Nueva factura
@@ -103,19 +110,25 @@ export default function Contable() {
       ),
     });
     return () => set({});
-  }, [set, escribe, facturas.datos]);
+  }, [set, escribe, exportarTodo]);
 
-  if ((facturas.cargando && !facturas.datos) || (clientes.cargando && !clientes.datos))
+  if (
+    (facturas.cargando && !facturas.datos) ||
+    (clientes.cargando && !clientes.datos) ||
+    (resumen.cargando && !resumen.datos)
+  )
     return <Cargando />;
-  if (facturas.error || clientes.error)
-    return <Mensaje>{mensajeDeError(facturas.error ?? clientes.error)}</Mensaje>;
+  if (facturas.error || clientes.error || resumen.error)
+    return <Mensaje>{mensajeDeError(facturas.error ?? clientes.error ?? resumen.error)}</Mensaje>;
 
   const recargarTodo = () => {
     facturas.recargar();
+    resumen.recargar();
     clientes.recargar();
   };
-  const noCanceladas = facturas.datos.filter((f) => f.estado_pago !== 'CANCELADO');
-  const delMes = noCanceladas.filter((f) => String(f.fecha).startsWith(periodoActual()));
+  const filas = facturas.datos.filas;
+  const totalFacturas = facturas.datos.total;
+  const totalPaginas = Math.max(1, Math.ceil(totalFacturas / PORPAGINA));
   const activos = clientes.datos.filter((c) => c.activo).length;
   const pendiente = clientes.datos.reduce((a, c) => a + Number(c.monto_pendiente), 0);
   const vencido = clientes.datos.reduce((a, c) => a + Number(c.monto_vencido), 0);
@@ -132,15 +145,15 @@ export default function Contable() {
         />
         <KpiCard
           label="Facturación del mes"
-          value={pesos(delMes.reduce((a, f) => a + Number(f.valor_total), 0))}
-          delta={`${delMes.length} facturas`}
+          value={pesos(resumen.datos.mesTotal)}
+          delta={`${resumen.datos.mesFacturas} facturas`}
           up
           sub="con IVA"
         />
         <KpiCard
           label="Pendiente de cobro"
           value={pesos(pendiente)}
-          delta={`${facturas.datos.filter((f) => ['PENDIENTE', 'PARCIAL'].includes(f.estado_pago)).length} facturas`}
+          delta={`${resumen.datos.pendientes} facturas`}
           up={false}
         />
         <KpiCard
@@ -158,8 +171,8 @@ export default function Contable() {
           <Panel title="Registro de facturas">
             <Table
               headers={['Folio', 'Comercializador', 'Agente', 'Fecha', 'Vence', 'Total', 'Estatus']}
-              onRowClick={(i) => setModal({ tipo: 'detalle', id: facturas.datos[i].id_factura })}
-              rows={facturas.datos.map((f) => [
+              onRowClick={(i) => setModal({ tipo: 'detalle', id: filas[i].id_factura })}
+              rows={filas.map((f) => [
                 <Mono bold>{f.folio}</Mono>,
                 <Texto bold>{f.clientes?.nombre_empresa}</Texto>,
                 <Texto dim>{f.agentes_ventas?.nombre}</Texto>,
@@ -173,6 +186,22 @@ export default function Contable() {
                 />,
               ])}
             />
+            <div className="flex items-center justify-between gap-3 pt-3 mt-1 border-t border-border text-[12px] text-text-dim">
+              <span>
+                {miles(totalFacturas)} facturas · página {pagina + 1} de {totalPaginas}
+              </span>
+              <div className="flex gap-2">
+                <Boton disabled={pagina === 0} onClick={() => setPagina((p) => Math.max(0, p - 1))}>
+                  Anterior
+                </Boton>
+                <Boton
+                  disabled={pagina + 1 >= totalPaginas}
+                  onClick={() => setPagina((p) => p + 1)}
+                >
+                  Siguiente
+                </Boton>
+              </div>
+            </div>
           </Panel>
           <Panel title="Top 5 comercializadores">
             {clientes.datos.slice(0, 5).map((c) => (
@@ -210,6 +239,7 @@ export default function Contable() {
         {modal?.tipo === 'nueva' && (
           <FormCabecera
             onCreada={(f) => {
+              setPagina(0);
               recargarTodo();
               setModal({ tipo: 'detalle', id: f.id_factura, recienCreada: f });
             }}
