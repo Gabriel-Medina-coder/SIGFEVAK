@@ -20,10 +20,11 @@
 - [x] #50 Vistas de contrato con las áreas 4, 5 y 6 (Diego, Eduardo) · main 2026-09-13
 - [x] #51 Seed con el ejemplo FAC-000016 y el del área 4 (Diego, Eduardo) · main 2026-09-13
 - [x] #52 Pruebas SQL del área (Diego, Eduardo) · main 2026-09-13
+- [x] #53 a #59 Módulo, servicios, comercializadores, factura con renglones y alta de cliente, cobros, pendientes, tablero y prueba de punta a punta con capturas (Diego, Eduardo) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #53 a #58 Módulo, servicios, comercializadores, factura con renglones, cobros, pendientes y dashboard (Diego, Eduardo) · construidos, en prueba en navegador
+- Nada
 
 ## Bloqueado
 
@@ -31,7 +32,7 @@
 
 ## Próximo
 
-- #59 prueba de punta a punta con capturas, #60 cierre
+- #60 cierre del área: reporte final y evaluación del equipo (líder)
 
 ## Bitácora
 
