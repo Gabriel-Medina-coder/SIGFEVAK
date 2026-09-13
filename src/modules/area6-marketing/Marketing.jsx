@@ -1381,7 +1381,7 @@ function Investigaciones({ campanas, escribe, usuario }) {
               <a
                 href={i.url_reporte}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-[12.5px] text-accent"
               >
                 Abrir reporte

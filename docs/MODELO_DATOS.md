@@ -54,6 +54,10 @@ Todas las tablas de las seis áreas en una sola base PostgreSQL (D-02). Este arc
 | `v_cumplimiento_meta` | Área 4 | 4, 6 | Ventas cobradas vs meta por agente |
 | `v_retenciones_area5` | Área 4 | 5 | ISR retenido, IMSS obrero, base ISN e ISN estimado con la tasa de la entidad, por entidad y periodo |
 | `v_desempeno_agente_zona` | Área 4 | 6 | Cumplimiento por agente y zona |
+| `v_nomina_totales` | Área 4 | 4 | Percepciones, deducciones y neto por agente y periodo |
+| `v_recibo_nomina` | Área 4 | 4 | Recibo por agente con claves SAT |
+| `v_sbc_bimestral` | Área 4 | 4 | Base para el salario base de cotización bimestral |
+| `v_clientes_nuevos_agente` | Área 4 | 4 | Primera compra pagada de cada cliente por agente |
 | `v_obligaciones_pendientes`, `v_obligaciones_vencidas`, `v_calendario_fiscal`, `v_alertas_activas`, `v_licencias_por_vencer` | Área 5 | 5, tablero | Obligaciones por estado, próximos 30 días, alertas, licencias |
 | `v_pagos_por_institucion` | Área 5 | 5, Coordinación | Pagos por institución y periodo |
 | `v_tasas_isn` | Área 5 | 4 | Tasa de ISN por entidad (I-03) |
@@ -65,6 +69,10 @@ Todas las tablas de las seis áreas en una sola base PostgreSQL (D-02). Este arc
 | `v_directo_desempeno` | Área 6 | 6 | Clientes objetivo, contactados, convertidos y tasa de conversión de campañas directas |
 | `v_ventas_atribuidas_campana` | Área 6 | 6 | ROI real: facturas pagadas de clientes de la campaña dentro de su vigencia (lee `facturas` del Área 2) |
 | `v_productos_baja_rotacion_campana` | Área 6 (opcional) | 6 | Candidatos a campaña desde `v_rotacion` del Área 3 |
+
+## Seguridad de acceso
+
+RLS activo en toda tabla. Sin sesión no se lee ni ejecuta nada (D-11). La escritura está limitada por rol en la base, reflejando `src/lib/permisos.js` (D-13, migraciones `0930` y `0940`): cada tabla solo la escribe el rol de su módulo, más ADMINISTRADOR; los parámetros y catálogos solo ADMINISTRADOR; `usuarios` es legible solo en la fila propia; `productos.stock` solo lo mueven los triggers de inventario. La lectura entre áreas queda abierta a `authenticated` por las vistas de contrato. Detalle en `docs/SEGURIDAD.md`.
 
 ## Enums registrados
 

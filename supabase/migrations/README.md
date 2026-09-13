@@ -24,3 +24,9 @@ El script usa el token de `.env.supabase`, que no se sube. Para ver las ya regis
 ## Seguridad
 
 Toda vista nueva se crea con `CREATE VIEW nombre WITH (security_invoker = true) AS ...`; sin eso se salta el RLS y queda legible sin sesión (D-11). Después de aplicar, corre `node supabase/sql.mjs file supabase/tests/coord/seguridad.sql`.
+
+## Seguridad (coordinación)
+
+- `20260913_0800_a00_seguridad_anon.sql`: sin sesión no se lee ni ejecuta nada (D-11).
+- `20260913_0910` y `_0910`: quitan la ejecución de funciones a `anon` y `PUBLIC`; toda migración que cree funciones repite ese REVOKE/GRANT.
+- `20260913_0930_a00_endurece_autorizacion.sql` y `20260913_0940_a00_rls_por_rol.sql`: control de acceso por rol en la base (D-13). Ver `docs/SEGURIDAD.md`.

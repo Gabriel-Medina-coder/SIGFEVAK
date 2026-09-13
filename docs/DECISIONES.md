@@ -16,6 +16,7 @@ Cada decisión tiene contexto, opciones, decisión y consecuencias. Una decisió
 | D-10 | Migraciones aplicadas por la coordinación sin Supabase CLI ni Docker | Cerrada | 2026-09-13 |
 | D-11 | Ningún dato es legible sin sesión: vistas con `security_invoker` y sin privilegios para `anon` | Cerrada | 2026-09-13 |
 | D-12 | La base de demostración trae dos años de operación simulada con `seed_historico.sql` | Cerrada | 2026-09-13 |
+| D-13 | El control de acceso por rol se aplica en la base con RLS, no solo en el frontend | Cerrada | 2026-09-13 |
 
 ---
 
@@ -88,3 +89,15 @@ Cada decisión tiene contexto, opciones, decisión y consecuencias. Una decisió
 **Decisión.** `supabase/seed/seed_historico.sql` simula la operación de sep 2024 a ago 2026 y se carga después de todas las migraciones y seeds de área. Todo entra por los triggers con fechas explícitas: compras, unas 960 facturas cobradas o canceladas, conciliaciones, 23 nóminas mensuales cerradas, obligaciones fiscales cerradas, pedimentos, licencias vencidas, campañas e investigaciones. Lo comprado cada mes es lo vendido ese mes, así el stock final y los ejemplos de los seeds no cambian. Es determinista e idempotente. Los parámetros legales y fiscales de 2024 y 2025 entran con su vigencia.
 
 **Consecuencias.** Las siete suites de `supabase/tests/` siguen pasando sobre la base completa. Los ids ya no siguen el orden del calendario, así que las pantallas ordenan por fecha. Los folios de las facturas históricas son posteriores a los de los seeds de área.
+
+## D-13 · Control de acceso por rol en la base
+
+**Contexto.** La llave `anon` es pública y la app habla directo con la API de Supabase. Una auditoría OWASP encontró que la autorización por módulo solo vivía en el frontend (`src/lib/permisos.js` ocultaba botones), mientras la RLS dejaba a cualquier usuario con sesión escribir en casi cualquier tabla, cambiar las tasas fiscales, mover el stock a mano y firmar pasos a nombre de otro.
+
+**Decisión.** La autorización se aplica en la base:
+
+- `20260913_0930_a00_endurece_autorizacion.sql`: parámetros y catálogos solo los escribe ADMINISTRADOR; `usuarios` es legible solo en la fila propia (o por ADMINISTRADOR); `productos.stock/volumen/capital/valor` solo los mueven los triggers de inventario (RN-A3-06 en la base); la separación de funciones de nómina y obligaciones se ata al usuario realmente conectado.
+- `20260913_0940_a00_rls_por_rol.sql`: cada tabla del modelo solo la escribe el rol que su módulo tiene en `src/lib/permisos.js`, más ADMINISTRADOR. La lectura sigue abierta a `authenticated` (las áreas se leen entre sí por vistas de contrato).
+- Toda migración que cree funciones termina quitando la ejecución a `anon` y `PUBLIC`.
+
+**Consecuencias.** Un usuario con sesión no puede escribir fuera de su módulo (probado: HTTP 403), ni cambiar tasas, ni el stock, ni suplantar a otro en una firma. Los scripts y seeds corren como `service_role` y no se ven afectados (la RLS no aplica). El detalle de la auditoría y las pruebas están en `docs/SEGURIDAD.md` y `docs/QA.md`.

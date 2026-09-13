@@ -26,12 +26,12 @@ Cada pantalla de área tiene la misma forma: una fila de tarjetas KPI arriba, un
 | --- | --- | --- |
 | ADMINISTRADOR | Todo | Todo, incluidos catálogos y usuarios |
 | ALMACEN | Entradas, Base de Productos | Registrar entradas, órdenes de producción, conciliar |
-| CONTADOR | Registro Contable, Regulación | Facturar, registrar cobros, declaraciones y líneas de captura |
+| CONTADOR | Registro Contable, Regulación, Nómina | Facturar, registrar cobros, declaraciones y líneas de captura; calcula el periodo de nómina |
 | GERENTE_VENTAS | Nómina | Revisar y dar visto bueno al cálculo de comisiones |
 | AUTORIZADOR | Nómina, Regulación | Autorizar nómina y pagos fiscales. Nunca calcula ni captura |
-| COMERCIO_EXTERIOR | Regulación | Importaciones, pedimentos, fracciones |
+| COMERCIO_EXTERIOR | Regulación | Importaciones, pedimentos, fracciones. Rol del enum sin cuenta demo |
 | MARKETING | Marketing | Campañas, costos, investigación, contactos |
-| CAPTURISTA | Lectura general | Capturar sin autorizar, en el área que le asigne el administrador |
+| CAPTURISTA | Lectura general | Rol del enum sin escritura en esta versión; sin cuenta demo |
 
 ## 2. El flujo de negocio de punta a punta
 
