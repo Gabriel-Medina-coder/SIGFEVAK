@@ -133,15 +133,18 @@ export default function Marketing() {
 
   return (
     <>
-      {pestana === 'tablero' && (
-        <Tablero campanas={campanas.datos} onAbrir={(id) => setModal({ tipo: 'detalle', id })} />
-      )}
-      {pestana !== 'tablero' && <IndicadoresBreves campanas={campanas.datos} />}
+      <IndicadoresBreves campanas={campanas.datos} />
 
       <Pestanas opciones={pestanas} activa={pestana} onCambiar={setPestana} />
 
       {pestana === 'tablero' && (
-        <Recientes campanas={campanas.datos} onAbrir={(id) => setModal({ tipo: 'detalle', id })} />
+        <>
+          <Tablero campanas={campanas.datos} />
+          <Recientes
+            campanas={campanas.datos}
+            onAbrir={(id) => setModal({ tipo: 'detalle', id })}
+          />
+        </>
       )}
       {pestana === 'campanas' && (
         <Campanas campanas={campanas.datos} onAbrir={(id) => setModal({ tipo: 'detalle', id })} />
@@ -580,11 +583,13 @@ function DetalleCampana({ id, escribe, usuario, onCambio }) {
           }
         />
         <Dato
-          etiqueta="ROI estimado"
+          etiqueta="ROI estimado por métricas"
           valor={
             <Mono bold>
-              {resumen.roi === null || resumen.roi === undefined
-                ? '—'
+              {resumen.roi === null ||
+              resumen.roi === undefined ||
+              Number(resumen.ingreso_atribuido) === 0
+                ? 'sin métricas'
                 : `${Number(resumen.roi).toFixed(4)}x`}
             </Mono>
           }
