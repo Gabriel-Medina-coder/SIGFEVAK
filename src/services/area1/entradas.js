@@ -19,6 +19,18 @@ export async function listarDiscrepanciasRecepcion() {
     .then(datos);
 }
 
+// I-04: impuestos por unidad (IGI + DTA, sin IVA) del pedimento más reciente del producto, publicados por el área 5
+export async function impuestosUltimoPedimento(id_producto) {
+  const filas = await supabase
+    .from('v_impuestos_importacion_producto')
+    .select('numero_pedimento, fecha_importacion, impuestos_por_unidad_sin_iva')
+    .eq('id_producto', id_producto)
+    .order('fecha_importacion', { ascending: false })
+    .limit(1)
+    .then(datos);
+  return filas[0] ?? null;
+}
+
 export async function listarReabastecimiento() {
   return supabase.from('v_reabastecimiento').select('*').then(datos);
 }

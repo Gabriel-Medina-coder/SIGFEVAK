@@ -1,4 +1,4 @@
--- Área 1 · Issue #33 · Pruebas de RN-A1-04 a RN-A1-18
+-- Área 1 · Issues #33, #39 · Pruebas de RN-A1-04 a RN-A1-18
 -- Entradas: almacén, lote, moneda, documento, proveedor. Manufactura: orden sin BOM, retroceso, consumo en
 -- estado incorrecto, materia fuera del BOM, stock negativo, calidad, doble cierre y costo del ejemplo 10.2.
 -- Cada bloque lanza RAISE EXCEPTION si la regla no se cumple. Corre en una transacción que se revierte.
@@ -199,6 +199,14 @@ BEGIN
     EXCEPTION WHEN OTHERS THEN IF SQLERRM LIKE 'RN-A1-11%' THEN v_ok := TRUE; ELSE RAISE; END IF;
     END;
     IF NOT v_ok THEN RAISE EXCEPTION 'RN-A1-11 falló: modificó una orden terminada'; END IF;
+
+    -- I-01 (#39): el capital por periodo de v_entradas_area1 (contrato del área 3) cuadra al centavo con v_entradas_detalle
+    IF EXISTS (
+        SELECT 1 FROM (SELECT periodo, SUM(capital_inversion) AS cap FROM v_entradas_area1 GROUP BY periodo) a
+        FULL JOIN (SELECT TO_CHAR(fecha, 'YYYY-MM') AS periodo, SUM(capital_entrada_mxn) AS cap FROM v_entradas_detalle GROUP BY 1) d USING (periodo)
+        WHERE a.cap IS DISTINCT FROM d.cap) THEN
+        RAISE EXCEPTION 'I-01 falló: v_entradas_area1 no cuadra con v_entradas_detalle';
+    END IF;
 
     RAISE NOTICE 'Pruebas del área 1: todas pasaron';
 END $$;

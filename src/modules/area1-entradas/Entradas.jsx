@@ -31,6 +31,7 @@ import {
   listarEntradas,
   registrarEntrada,
   capitalEstimado,
+  impuestosUltimoPedimento,
   listarDiscrepanciasRecepcion,
   listarReabastecimiento,
 } from '@/services/area1/entradas';
@@ -216,7 +217,7 @@ function FormEntrada({ usuario, onListo, onCancelar }) {
       listarAlmacenes({ tipo: 'PRODUCTO_TERMINADO', soloActivos: true }),
     ])
   );
-  const [f, , campo] = useFormulario({
+  const [f, setF, campo] = useFormulario({
     fecha: hoyIso(),
     moneda: 'MXN',
     tipo_cambio: '1',
@@ -227,6 +228,10 @@ function FormEntrada({ usuario, onListo, onCancelar }) {
   });
   const [error, setError] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const pedimento = useDatos(
+    () => (f.id_producto ? impuestosUltimoPedimento(Number(f.id_producto)) : Promise.resolve(null)),
+    [f.id_producto]
+  );
 
   if (catalogos.cargando) return <Cargando />;
   if (catalogos.error) return <Mensaje>{mensajeDeError(catalogos.error)}</Mensaje>;
@@ -350,6 +355,28 @@ function FormEntrada({ usuario, onListo, onCancelar }) {
           <Entrada {...campo('responsable_recepcion')} />
         </Campo>
       </RejillaForm>
+      {pedimento.datos && (
+        <Mensaje tipo="info">
+          Último pedimento de este producto ({pedimento.datos.numero_pedimento} ·{' '}
+          {fechaCorta(pedimento.datos.fecha_importacion)}): IGI y DTA de{' '}
+          <Mono bold>
+            {pesos(pedimento.datos.impuestos_por_unidad_sin_iva, { centavos: true })}
+          </Mono>{' '}
+          por unidad, calculados por Regulación.{' '}
+          <button
+            type="button"
+            className="text-accent hover:underline cursor-pointer"
+            onClick={() => {
+              // I-04: impuestos_unitarios va en la moneda de la entrada; el trigger lo multiplica por el tipo de cambio
+              const mxn = Number(pedimento.datos.impuestos_por_unidad_sin_iva);
+              const tc = f.moneda === 'MXN' ? 1 : Number(f.tipo_cambio) || 1;
+              setF((x) => ({ ...x, impuestos_unitarios: (mxn / tc).toFixed(2) }));
+            }}
+          >
+            Usar en esta entrada
+          </button>
+        </Mensaje>
+      )}
       <Campo etiqueta="Observaciones">
         <AreaTexto {...campo('observaciones')} />
       </Campo>

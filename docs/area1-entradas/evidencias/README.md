@@ -12,3 +12,8 @@ Capturas del recorrido de punta a punta grabado en la app real el 13 sep 2026. E
 - [historia-06-orden-con-bom.png](historia-06-orden-con-bom.png)
 - [historia-07-calidad-separacion-funciones.png](historia-07-calidad-separacion-funciones.png)
 - [historia-08-orden-terminada.png](historia-08-orden-terminada.png)
+
+## Integración y aceptación
+
+- [issue-39-integracion.md](issue-39-integracion.md): Nómina y Marketing leen las vistas de manufactura; capital cuadrado al centavo
+- [issue-103-impuestos-del-pedimento.png](issue-103-impuestos-del-pedimento.png): Entradas usa los impuestos por unidad del último pedimento

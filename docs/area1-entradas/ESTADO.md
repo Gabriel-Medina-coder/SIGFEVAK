@@ -22,10 +22,12 @@
 - [x] #31 Vistas de reporte (Diego, Viviana) · main 2026-09-13
 - [x] #32 Vistas de contrato con las áreas 4, 5 y 6 (Diego, Viviana) · main 2026-09-13
 - [x] #33 Pruebas SQL del área (Diego, Viviana) · main 2026-09-13
+- [x] #34 a #38 Servicios, módulo, catálogos, entradas con capital en vivo, órdenes de producción y prueba de punta a punta con capturas en la historia del flujo (Diego, Viviana) · main 2026-09-13
+- [x] #39 Integración con las áreas 4 y 6: Nómina lee `v_mano_obra_produccion`, Marketing lee `v_ordenes_produccion` y `v_reabastecimiento`; `v_entradas_area1` cuadra al centavo con `v_entradas_detalle` en los 25 meses (Diego, Viviana) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #34 a #37 Servicios, módulo, catálogos, pantalla de entradas y órdenes de producción (Diego, Viviana) · construidos, en prueba en navegador
+- Nada
 
 ## Bloqueado
 
@@ -33,7 +35,7 @@
 
 ## Próximo
 
-- #38 prueba de punta a punta con capturas, #39 confirmar lecturas de las áreas 4 y 6, #40 cierre
+- #40 cierre del área: reporte final y evaluación del equipo (líder)
 
 ## Bitácora
 
@@ -45,6 +47,7 @@
 - Decisión: la migración de manufactura va antes que las columnas aditivas porque `entradas_producto` referencia `lotes` y `ordenes_produccion`.
 - Preguntas abiertas 1, 6, 7 y 8 cerradas en la sección 16 del contexto; 2, 3, 4 y 5 quedan como fase 2.
 - Módulo construido en `src/modules/area1-entradas/` con servicios en `src/services/area1/`: entradas con capital estimado en vivo, órdenes de producción con consumo, calidad y cierre, materias primas, proveedores, almacenes y discrepancias. Consultas verificadas con la cuenta de almacén. Falta la prueba en navegador para cerrar los issues.
+- Entradas lee de Regulación los impuestos por unidad del último pedimento del producto (`v_impuestos_importacion_producto`) y los usa en la entrada con un clic, convertidos a la moneda de la entrada (#103). La vista `v_entradas_area1` redondea el capital por entrada y ya no difiere un centavo (#39). Evidencias en `evidencias/issue-39-integracion.md` e `issue-103-impuestos-del-pedimento.png`.
 
 ### Lun 14 sep · Base de datos
 
