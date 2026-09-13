@@ -662,7 +662,7 @@ Un agente que se tope con alguna de estas **no debe decidir por su cuenta**: lo 
 
 1. ¿Se manejan varios almacenes? El modelo aprobado asume uno solo; multi-almacén exigiría agregar `id_almacen` a entradas, salidas y stock.
 2. ¿El costo de inventario es último costo o promedio ponderado? Actualmente `valor_entrada` guarda el último (RN-A3-08); contabilidad podría requerir promedio.
-3. ¿Se permiten devoluciones de cliente? Hoy no hay forma de regresar mercancía al stock salvo mediante un ajuste.
+3. **Cerrada (I-11, #3).** Cancelar una factura no reintegra stock: el área 2 solo cambia `estado_pago` a `CANCELADO`. Una devolución de cliente se registra en `ajustes_inventario` con motivo `DEVOLUCION` y el trigger de ajuste alinea el stock (RN-A3-07).
 4. ¿Quién ejecuta la conciliación física y con qué periodicidad? El flujo dice semanal o mensual, sin definirlo.
 5. ¿Se controla un stock mínimo por producto para alertar reabastecimiento? No existe la columna en el modelo aprobado.
 

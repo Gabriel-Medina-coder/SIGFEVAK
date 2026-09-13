@@ -103,16 +103,16 @@ Todas las tablas de las seis áreas en una sola base PostgreSQL (D-02). Este arc
 
 | # | Pide | A | Qué | Estado |
 | --- | --- | --- | --- | --- |
-| I-01 | Área 1 | Área 3 | Columnas aditivas en `productos` y `entradas_producto` (las hace el Área 1); cambio de fórmula en `fn_entrada_producto` y en `v_entradas_area1` a `(costo + flete + impuestos) × tipo_cambio` (lo hace el Área 3). Compatible hacia atrás por los defaults | Abrir issue jue 11 |
+| I-01 | Área 1 | Área 3 | Columnas aditivas en `productos` y `entradas_producto` (las hace el Área 1); cambio de fórmula en `fn_entrada_producto` y en `v_entradas_area1` a `(costo + flete + impuestos) × tipo_cambio` (lo hace el Área 3). Compatible hacia atrás por los defaults | Cerrada dom 13 (#1): `entradas_producto` nace con `flete_unitario`, `impuestos_unitarios` y `tipo_cambio`; `fn_entrada_producto` y `v_entradas_area1` ya usan la fórmula |
 | I-02 | Área 4 | Área 2 | `fecha_cobro`, `fecha_vencimiento` y `subtotal` en `facturas`; `id_agente` ya es obligatorio; `v_cartera_agente` | Diseñado en el contexto del Área 2; el Área 4 confirma que le basta |
 | I-03 | Área 4 | Área 5 | Tasas de ISN por estado cargadas en `parametros_legales` | Abrir issue jue 11 |
 | I-04 | Área 5 ↔ Área 1 | ambas | El Área 1 publica `v_entradas_importacion`; el Área 5 devuelve el monto de impuestos aduanales por entrada (IGI, DTA, IVA de importación) para llenar `impuestos_unitarios`. Mientras no exista, se captura a mano con default 0 | Abrir issue jue 11 |
 | I-06 | Área 4 | Área 1 | `v_mano_obra_produccion` para bonos de productividad; solo lectura, ya publicada | Sin issue |
 | I-07 | Área 5 | Área 2 | `v_iva_trasladado_periodo`: IVA trasladado y UUID de CFDI por mes, para la obligación mensual de IVA | Diseñada en el contexto del Área 2; abrir issue jue 11 para confirmar |
 | I-08 | Área 5 | Coordinador | Tabla `usuarios` con `id_usuario UUID` y `rol`, referenciada desde obligaciones, pagos, alertas y bitácora; `pg_cron` para alertas o botón manual "Actualizar alertas" | Migración base del coordinador |
-| I-09 | Área 6 | Área 3 | La migración base **no crea** `marketing` ni `clientes_marketing`; el Área 6 crea sus ocho tablas. Baja lógica en `productos` (columna `activo`) en vez de borrado físico | Abrir issue jue 11; el Área 3 ajusta su sección de DDL |
+| I-09 | Área 6 | Área 3 | La migración base **no crea** `marketing` ni `clientes_marketing`; el Área 6 crea sus ocho tablas. Baja lógica en `productos` (columna `activo`) en vez de borrado físico | Cerrada dom 13 (#2): la base no crea `marketing` ni `clientes_marketing`; `productos.activo` existe |
 | I-10 | Área 6 | Área 2 | Columna `activo` y baja lógica en `clientes`; lectura de `facturas` pagadas; `v_clientes_activos` | Diseñada en el contexto del Área 2; abrir issue jue 11 para confirmar |
 | I-05 | Área 6 | Área 4 | `v_desempeno_agente_zona` | Ya definida por el Área 4 |
-| I-11 | Área 2 | Área 3 | Definir si cancelar una factura reintegra stock (pregunta abierta 2 del Área 2 y 3 del Área 3). Hoy no se reintegra; una devolución sería un ajuste de inventario | Abrir issue jue 11 |
+| I-11 | Área 2 | Área 3 | Definir si cancelar una factura reintegra stock (pregunta abierta 2 del Área 2 y 3 del Área 3). Hoy no se reintegra; una devolución sería un ajuste de inventario | Cerrada dom 13 (#3): cancelar no reintegra stock; una devolución se registra como `ajustes_inventario` con motivo `DEVOLUCION` |
 | I-12 | Área 2 | Área 4 | Un solo seed de `agentes_ventas` para no duplicar agentes entre las dos áreas | Acordar en seed |
 | I-13 | Área 2 | Área 1 | Leer `productos.precio_venta_sugerido` para precargar el precio unitario del renglón | Solo lectura, sin issue |
