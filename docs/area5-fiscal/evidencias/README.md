@@ -13,3 +13,7 @@ Capturas del recorrido de punta a punta grabado en la app real el 13 sep 2026. E
 - [historia-29-iva-cerrado.png](historia-29-iva-cerrado.png)
 - [historia-30-pedimento-captura.png](historia-30-pedimento-captura.png)
 - [historia-31-pedimentos.png](historia-31-pedimentos.png)
+
+## Integración y aceptación
+
+- [issue-103-integracion.md](issue-103-integracion.md): ISN, IVA, pedimentos e impuestos por unidad probados

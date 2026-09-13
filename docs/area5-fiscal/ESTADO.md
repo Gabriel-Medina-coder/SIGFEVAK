@@ -23,10 +23,12 @@
 - [x] #95 Vista de contrato `v_impuestos_importacion_producto` (Diego, Ivan) · main 2026-09-13
 - [x] #96 Seed completo (Diego, Ivan) · main 2026-09-13
 - [x] #97 Pruebas SQL del área (Diego, Ivan) · main 2026-09-13
+- [x] #98 a #102 Módulo, servicios, obligaciones con calendario y alertas, flujo completo por rol, importaciones y licencias (Diego, Ivan) · main 2026-09-13
+- [x] #103 Integración probada: ISN desde `v_retenciones_area5`, IVA desde `v_iva_trasladado_periodo`, 24 pedimentos ligados a `v_entradas_importacion`, Entradas lee `v_impuestos_importacion_producto` e IVA por los 9 estados en la app con dos usuarios (Diego, Ivan) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #98 a #102 Módulo, servicios, obligaciones con calendario y alertas, flujo completo por rol, importaciones y licencias (Diego, Ivan) · construidos, en prueba en navegador
+- Nada
 
 ## Bloqueado
 
@@ -34,7 +36,7 @@
 
 ## Próximo
 
-- #103 punta a punta con capturas (IVA por los nueve estados con dos usuarios), #104 cierre
+- #104 cierre del área: reporte final y evaluación del equipo (líder), antes de las 14:00 del jueves 17
 
 ## Bitácora
 
