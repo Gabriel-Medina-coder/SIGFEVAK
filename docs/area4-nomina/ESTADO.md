@@ -22,10 +22,12 @@
 - [x] #76 `fn_calcular_periodo` y `fn_aplicar_ajustes` (Diego, Fernando) · main 2026-09-13
 - [x] #77 `fn_calcular_nomina` (Diego, Fernando) · main 2026-09-13
 - [x] #80 Pruebas SQL del área (Diego, Fernando) · main 2026-09-13
+- [x] #72 a #75, #78 y #79 Servicios, módulo, agentes, catálogos y metas, periodo por rol, recibos, dispersión y reportes (Diego, Fernando) · main 2026-09-13
+- [x] #81 Aceptación: ejemplo de la sección 10 exacto, paralelo en Excel de los 5 agentes con diferencia $0.00, casos límite en pruebas SQL, ajuste automático por cancelación, alta de agente y flujo por varios usuarios (Diego, Fernando) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #72 a #75, #78 y #79 Servicios, módulo, agentes, catálogos y metas, pantalla de periodo por rol, recibos, dispersión y reportes (Diego, Fernando) · construidos, en prueba en navegador
+- Nada
 
 ## Bloqueado
 
@@ -33,7 +35,7 @@
 
 ## Próximo
 
-- #81 aceptación y punta a punta con capturas, #82 cierre
+- #82 cierre del área: reporte final y evaluación del equipo (líder)
 
 ## Bitácora
 
@@ -47,6 +49,7 @@
 - Preguntas abiertas 1 a 8 cerradas en la sección 16 del contexto.
 - Módulo construido en `src/modules/area4-nomina/` con servicios en `src/services/area4/`: calcula CONTADOR o ADMINISTRADOR, revisa GERENTE_VENTAS, autoriza AUTORIZADOR y quien calculó no ve habilitado autorizar. Recibo con claves SAT, CSV de dispersión y reportes. Consultas verificadas con la cuenta del gerente. Falta la prueba en navegador para cerrar los issues.
 - Integración I-03 cerrada (#62): el Área 5 publica `v_tasas_isn`.
+- RN-A4-08 no tenía disparador: se agrega `fn_ajuste_por_cancelacion` (migración `20260913_0900_a4_ajuste_por_cancelacion`), que al cancelar una factura cobrada en un periodo ya autorizado crea el ajuste negativo con la tasa pagada. Pruebas nuevas: salario exacto del mínimo ZLFN, tramo al 100 % exacto, agente sin esquema con tasa de respaldo y bitácora, cancelación con y sin comisión pagada. Reportes muestra la mano de obra de producción del periodo (insumo futuro de bonos, sin cambiar el cálculo). Evidencias en `evidencias/issue-81-aceptacion.md`.
 
 ### Lun 14 sep · Base de datos
 
