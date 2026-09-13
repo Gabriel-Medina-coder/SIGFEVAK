@@ -5,9 +5,6 @@ import { MODULOS } from '@/lib/permisos';
 import { ICONO_MODULO } from '@/components/Iconos';
 import './landing.css';
 
-const REPO = 'https://github.com/Gabriel-Medina-coder/SIGFEVAK';
-const HISTORIA = `${REPO}/blob/main/docs/HISTORIA_FLUJO.md`;
-
 // Posición del puntero compartida por el fondo, la luz y el logo (una sola escucha en window)
 const puntero = { x: -9999, y: -9999, t: 0 };
 const sinMovimiento = () =>
@@ -15,11 +12,11 @@ const sinMovimiento = () =>
 
 const TITULO = ['Toda', 'la', 'operación', 'de', 'la', 'comercializadora,'];
 
-// Cifras de la base de demostración (dos años de operación, D-12)
+// Cifras de la operación registrada en el sistema
 const CIFRAS = [
   { valor: 25, prefijo: '$', sufijo: ' M', decimales: 1, etiqueta: 'capital de inversión' },
   { valor: 128819, etiqueta: 'unidades de volumen de comercialización' },
-  { valor: 958, etiqueta: 'facturas vigentes' },
+  { valor: 958, etiqueta: 'facturas emitidas' },
   { valor: 24, etiqueta: 'nóminas cerradas' },
   { valor: 83, etiqueta: 'impuestos, pedimentos y trámites cerrados' },
 ];
@@ -43,21 +40,22 @@ const FLUJO = [
       'Electrónicos importados y manufactura nacional con su valor, capital de inversión y volumen de comercialización.',
   },
   {
-    area: 'Área 3 · Inventario',
-    titulo: 'El stock se mueve solo',
-    texto: 'Solo los triggers escriben el stock. El kardex guarda cada movimiento con su origen.',
-  },
-  {
     area: 'Área 2 · Contabilidad',
     titulo: 'Se factura y se cobra',
     texto:
-      'Cada cliente con su número de comercializador; folio, IVA y totales los pone la base. No se vende lo que no hay.',
+      'Cada cliente con su número de comercializador; folio, IVA y totales salen solos y no se vende lo que no hay.',
+  },
+  {
+    area: 'Área 3 · Inventario',
+    titulo: 'El inventario se actualiza solo',
+    texto:
+      'Cada entrada y cada venta mueven las existencias al momento, con el historial de dónde vino cada movimiento.',
   },
   {
     area: 'Área 4 · Nómina',
     titulo: 'Se paga a los agentes',
     texto:
-      'Sueldo, comisión sobre lo cobrado y bonos, con ISR e IMSS. Quien calcula el periodo no lo autoriza.',
+      'Sueldo, comisión sobre lo cobrado y bonos, con ISR e IMSS. Quien calcula la nómina no la autoriza.',
   },
   {
     area: 'Área 5 · Fiscal',
@@ -69,7 +67,7 @@ const FLUJO = [
     area: 'Área 6 · Marketing',
     titulo: 'Se invierte en marketing y se mide',
     texto:
-      'Costos e investigación de mercado de campañas externas y directas; el ROI real sale de las facturas pagadas.',
+      'Costos e investigación de mercado de campañas externas y directas; el retorno real sale de las ventas cobradas.',
   },
 ];
 
@@ -81,13 +79,13 @@ const REGLAS = [
   },
   {
     titulo: 'Quien calcula no autoriza',
-    comando: 'autorizar nómina de octubre · admin',
-    respuesta: 'admin calculó el periodo y no puede autorizarlo',
+    comando: 'autorizar nómina de octubre · quien la calculó',
+    respuesta: 'quien calcula la nómina no puede autorizarla',
   },
   {
     titulo: 'Sin sesión no hay datos',
-    comando: 'leer v_nomina_totales · sin iniciar sesión',
-    respuesta: 'permiso denegado: inicia sesión para continuar',
+    comando: 'consultar la nómina · sin iniciar sesión',
+    respuesta: 'acceso denegado: inicia sesión para continuar',
   },
 ];
 
@@ -154,6 +152,12 @@ function aRgb(hex) {
   const h = hex.replace('#', '');
   const n = parseInt(h.length === 3 ? [...h].map((c) => c + c).join('') : h, 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+// Quita la etiqueta interna del área ("Área 1 · ") y deja la descripción con mayúscula inicial
+function descripcionModulo(subtitulo) {
+  const texto = subtitulo.split(' · ').slice(1).join(' · ') || subtitulo;
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
 // Tarjeta con borde y reflejo que siguen al cursor
@@ -450,23 +454,15 @@ function Hero() {
         >
           Comercializadora mexicana de electrónicos y manufactura nacional. De la mercancía que
           llega al almacén al impuesto que se paga: entradas, facturas, inventario, pagos a agentes,
-          trámites de gobierno y marketing conectados, con las reglas de negocio en la base de
-          datos.
+          trámites de gobierno y marketing conectados, con reglas que nadie se puede saltar.
         </p>
         <div className="lp-palabra mt-9 flex flex-wrap gap-3" style={{ animationDelay: '0.9s' }}>
           <Link to="/login" className="lp-boton lp-boton--acento">
             Iniciar sesión <span className="lp-flecha">→</span>
           </Link>
-          <a href={HISTORIA} target="_blank" rel="noreferrer" className="lp-boton lp-boton--vidrio">
-            Ver la historia con capturas
+          <a href="#flujo" className="lp-boton lp-boton--vidrio">
+            Cómo funciona
           </a>
-        </div>
-        <div
-          className="lp-palabra mt-10 flex items-center gap-3 text-[11.5px] text-text-dim"
-          style={{ animationDelay: '1.05s' }}
-        >
-          <span className="lp-pulso w-2 h-2 rounded-full bg-up inline-block" />
-          Base de demostración con dos años de operación · sep 2024 a sep 2026
         </div>
       </div>
       <div className="flex justify-center lp-palabra" style={{ animationDelay: '0.4s' }}>
@@ -681,14 +677,14 @@ function Cifras() {
         <div className="relative grid grid-cols-[1fr_1.6fr] gap-10 items-center max-[900px]:grid-cols-1">
           <div>
             <div className="lp-ceja">
-              <b>[</b> Dos años en la base <b>]</b>
+              <b>[</b> En números <b>]</b>
             </div>
             <h2 className="text-[34px] leading-[1.05] font-bold tracking-[-0.03em] mt-4 m-0">
-              Probado con uso real, no con tres registros de ejemplo.
+              Dos años de operación, cada peso con su registro.
             </h2>
             <p className="text-[13.5px] text-text-dim mt-4 leading-relaxed">
-              La base de demostración simula la operación de septiembre de 2024 a hoy. Todo entró
-              por las mismas reglas que usa la app y las pruebas de las seis áreas siguen pasando.
+              Capital invertido, volumen comercializado, facturas, nóminas y trámites se calculan
+              solos desde la operación diaria, sin hojas de cálculo aparte.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-x-8 gap-y-7 max-[480px]:grid-cols-1">
@@ -740,9 +736,8 @@ function Flujo() {
             Una venta recorre las seis áreas sin recapturar nada.
           </h2>
           <p className="text-[14px] text-text-dim mt-5 leading-relaxed">
-            Cada paso deja listo el siguiente. Lo que captura almacén lo usa contabilidad, lo que
-            cobra contabilidad paga la comisión y el impuesto, y marketing mide contra ventas
-            reales.
+            Cada paso deja listo el siguiente: lo que recibe el almacén lo vende contabilidad, lo
+            cobrado paga comisiones e impuestos, y marketing mide contra ventas reales.
           </p>
         </Revelar>
         <div ref={lista} className="relative pl-14">
@@ -857,12 +852,12 @@ function Modulos() {
             <b>[</b> Siete módulos <b>]</b>
           </div>
           <h2 className="text-[40px] leading-[1.05] font-bold tracking-[-0.03em] mt-4 m-0">
-            Cada área en su módulo.
+            Cada departamento, su espacio.
           </h2>
         </div>
         <p className="text-[13.5px] text-text-dim max-w-md leading-relaxed">
-          Todos se ven; cada quien captura solo en lo de su rol. La coordinación ve el resumen de
-          las seis.
+          Cada equipo trabaja en lo suyo con los permisos de su puesto, y la dirección ve toda la
+          operación en un resumen general.
         </p>
       </Revelar>
       <div className="grid grid-cols-4 gap-3.5 mt-10 max-[960px]:grid-cols-2 max-[520px]:grid-cols-1">
@@ -880,7 +875,9 @@ function Modulos() {
                   <Icono size={22} />
                 </div>
                 <div className="text-[14px] font-semibold">{m.etiqueta}</div>
-                <div className="text-[12px] text-text-dim mt-1">{m.subtitulo}</div>
+                <div className="text-[12px] text-text-dim mt-1">
+                  {descripcionModulo(m.subtitulo)}
+                </div>
               </div>
             </Revelar>
           );
@@ -906,15 +903,15 @@ function Final() {
             Entra y recorre la operación.
           </h2>
           <p className="text-[14px] text-text-dim mt-4 max-w-lg mx-auto leading-relaxed">
-            Cada rol tiene su cuenta de prueba. Si prefieres verlo antes, la historia completa trae
-            capturas y cifras de cada paso.
+            Entradas, ventas, inventario, nómina, impuestos y marketing en un solo lugar, con el
+            control de cada movimiento.
           </p>
           <div className="mt-8 flex justify-center flex-wrap gap-3">
             <Link to="/login" className="lp-boton lp-boton--acento">
               Iniciar sesión <span className="lp-flecha">→</span>
             </Link>
-            <a href={REPO} target="_blank" rel="noreferrer" className="lp-boton lp-boton--vidrio">
-              Ver el proyecto
+            <a href="#inicio" className="lp-boton lp-boton--vidrio">
+              Volver arriba
             </a>
           </div>
         </div>
@@ -957,7 +954,7 @@ export default function Landing() {
         <Final />
       </main>
       <footer className="lp-contenido max-w-6xl mx-auto px-6 py-8 border-t border-border flex justify-between flex-wrap gap-3 text-[11.5px] text-muted">
-        <span>SIGFEVAK · Comercializadora Nacional · Proyecto escolar</span>
+        <span>SIGFEVAK · Comercializadora Nacional</span>
         <span>Septiembre 2026</span>
       </footer>
     </div>
