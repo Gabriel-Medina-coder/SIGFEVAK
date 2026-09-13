@@ -2,6 +2,8 @@
 
 Cómo queda el sistema de punta a punta cuando las seis áreas terminen, y cómo la coordinación vigila que cada una vaya por donde debe. Este documento no reemplaza los contextos de área; los une.
 
+Para verlo funcionando, con capturas de cada paso y las cifras que deja en la base, lee [HISTORIA_FLUJO.md](HISTORIA_FLUJO.md).
+
 ## 1. Lo que ve el usuario
 
 Una sola aplicación web, tema oscuro, con menú lateral de siete entradas. Cada persona entra con correo y contraseña y ve las mismas siete pantallas; lo que puede hacer en cada una depende de su rol.
