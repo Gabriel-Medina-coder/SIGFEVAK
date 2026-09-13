@@ -1,4 +1,4 @@
-# Estado — Área 6 · Marketing
+# Estado · Área 6 · Marketing
 
 Última actualización: 2026-09-13 por Diego (coordinación) con César
 
@@ -8,23 +8,23 @@
 
 ## Hecho
 
-- [x] #105 Integración I-09 con el área 3: la base no crea `marketing` ni `clientes_marketing`; `productos.activo`; lectura de `v_rotacion` (Diego, César) — main 2026-09-13
-- [x] #106 Integración I-10 con el área 2: `clientes.activo`, `v_clientes_activos` y ventas atribuidas sobre `facturas` pagadas (Diego, César) — main 2026-09-13
-- [x] #107 Integración I-05 con el área 4 y la coordinación: `v_desempeno_agente_zona`, roles y vistas del resumen general (Diego, César) — main 2026-09-13
-- [x] #108 Enums y catálogos `canales_marketing` y `proveedores_marketing` (Diego, César) — main 2026-09-13
-- [x] #109 Tablas de operación y uniones con las áreas 2 y 3 (Diego, César) — main 2026-09-13
-- [x] #110 Índices, RLS mínima y `actualizado_en` por trigger (Diego, César) — main 2026-09-13
-- [x] #111 Triggers de presupuesto y campaña directa (Diego, César) — main 2026-09-13
-- [x] #112 Triggers de campaña cerrada y de activación (Diego, César) — main 2026-09-13
-- [x] #113 Seed con los casos A y B (Diego, César) — main 2026-09-13
-- [x] #114 Vistas de contrato `v_campana_resumen` y `v_costos_por_canal` (Diego, César) — main 2026-09-13
-- [x] #115 `v_ventas_atribuidas_campana` sobre facturas pagadas (Diego, César) — main 2026-09-13
-- [x] #116 `v_directo_desempeno` y `v_productos_baja_rotacion_campana` (Diego, César) — main 2026-09-13
-- [x] #117 Pruebas SQL del área (Diego, César) — main 2026-09-13
+- [x] #105 Integración I-09 con el área 3: la base no crea `marketing` ni `clientes_marketing`; `productos.activo`; lectura de `v_rotacion` (Diego, César) · main 2026-09-13
+- [x] #106 Integración I-10 con el área 2: `clientes.activo`, `v_clientes_activos` y ventas atribuidas sobre `facturas` pagadas (Diego, César) · main 2026-09-13
+- [x] #107 Integración I-05 con el área 4 y la coordinación: `v_desempeno_agente_zona`, roles y vistas del resumen general (Diego, César) · main 2026-09-13
+- [x] #108 Enums y catálogos `canales_marketing` y `proveedores_marketing` (Diego, César) · main 2026-09-13
+- [x] #109 Tablas de operación y uniones con las áreas 2 y 3 (Diego, César) · main 2026-09-13
+- [x] #110 Índices, RLS mínima y `actualizado_en` por trigger (Diego, César) · main 2026-09-13
+- [x] #111 Triggers de presupuesto y campaña directa (Diego, César) · main 2026-09-13
+- [x] #112 Triggers de campaña cerrada y de activación (Diego, César) · main 2026-09-13
+- [x] #113 Seed con los casos A y B (Diego, César) · main 2026-09-13
+- [x] #114 Vistas de contrato `v_campana_resumen` y `v_costos_por_canal` (Diego, César) · main 2026-09-13
+- [x] #115 `v_ventas_atribuidas_campana` sobre facturas pagadas (Diego, César) · main 2026-09-13
+- [x] #116 `v_directo_desempeno` y `v_productos_baja_rotacion_campana` (Diego, César) · main 2026-09-13
+- [x] #117 Pruebas SQL del área (Diego, César) · main 2026-09-13
 
 ## En progreso
 
-- [ ] #118 Módulo del área en la app compartida (Diego, César) — espera la app base con menú
+- [ ] #118 a #124 Módulo, servicios, tablero, campañas con detalle por pestañas, costos, catálogos e investigación (Diego, César) · construidos, en prueba en navegador
 
 ## Bloqueado
 
@@ -32,7 +32,7 @@
 
 ## Próximo
 
-- #119, #120, #121, #122, #123, #124, #125
+- #125 punta a punta con capturas, #126 cierre
 
 ## Bitácora
 
@@ -44,6 +44,7 @@
 - Decisión: la campaña del caso B se llama "Promo revendedores agosto" y su vigencia es agosto, que es cuando el seed del área 2 tiene facturas pagadas de esos clientes. Se agregó el canal "Llamada" (7 canales).
 - Decisión: RLS mínima; `fn_a6_usuario_tiene_rol` queda lista para el endurecimiento por rol si se decide (pregunta abierta 8).
 - Preguntas abiertas 1 a 8 cerradas en la sección 16 del contexto.
+- Módulo construido en `src/modules/area6-marketing/` con servicios en `src/services/area6/`: tablero con gasto por canal, campañas con pestañas de costos, métricas, clientes objetivo y productos, costos globales con totales por mes, investigación y catálogos solo para ADMINISTRADOR. Consultas verificadas con sesión real. Falta la prueba en navegador para cerrar los issues.
 
 ### Lun 14 sep · Base de datos
 
