@@ -20,7 +20,7 @@ paths:
 - Validaciones críticas en la base: `CHECK` y triggers, no solo en el frontend.
 - Toda tabla nueva activa RLS y define al menos la política mínima para `authenticated`.
 - Toda vista nueva se crea con `CREATE VIEW nombre WITH (security_invoker = true) AS ...`. Sin eso la vista corre con permisos del dueño, se salta el RLS y queda legible sin sesión. Después de aplicar, corre `supabase/tests/coord/seguridad.sql`.
-- Nunca otorgues privilegios a `anon`; todo el acceso es con sesión (`authenticated`).
+- Nunca otorgues privilegios a `anon`; todo el acceso es con sesión (`authenticated`). Toda migración que cree funciones termina con `REVOKE EXECUTE ON ALL FUNCTIONS IN SCHEMA public FROM anon, PUBLIC;` y `GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO authenticated, service_role;`: PostgreSQL da ejecución pública a cada función nueva.
 - Nunca escribas `productos.stock` directamente (RN-A3-06).
 - Seed: un archivo por área en `supabase/seed/seed_areaN.sql`, idempotente si es posible (`ON CONFLICT DO NOTHING`).
 - Pruebas: `supabase/tests/areaN/*.sql`; cada prueba dice qué RN verifica y falla con `RAISE EXCEPTION` si no se cumple.

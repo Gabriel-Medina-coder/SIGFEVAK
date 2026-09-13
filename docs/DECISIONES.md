@@ -79,7 +79,7 @@ Cada decisión tiene contexto, opciones, decisión y consecuencias. Una decisió
 
 **Decisión.** La migración `20260913_0800_a00_seguridad_anon.sql` pone `security_invoker` en todas las vistas y quita al rol `anon` todo privilegio sobre tablas, vistas, secuencias y funciones, también para lo que se cree después. Toda vista nueva se crea con `WITH (security_invoker = true)`.
 
-**Consecuencias.** Sin sesión no se lee ni se ejecuta nada. Con sesión, cada vista respeta el RLS de sus tablas. `supabase/tests/coord/seguridad.sql` falla si una vista o una función vuelve a quedar expuesta; se corre después de cada migración.
+**Consecuencias.** Sin sesión no se lee ni se ejecuta nada. Con sesión, cada vista respeta el RLS de sus tablas. `supabase/tests/coord/seguridad.sql` falla si una vista o una función vuelve a quedar expuesta; se corre después de cada migración. En Supabase el privilegio por defecto no evita que PostgreSQL dé ejecución pública a cada función nueva; por eso toda migración que crea funciones termina con el `REVOKE` y el `GRANT` de `20260913_0910_a00_permisos_funciones_nuevas`.
 
 ## D-12 · Dos años de operación en la base de demostración
 

@@ -99,4 +99,5 @@ No hay Supabase CLI ni Docker. Las migraciones las aplica la coordinación con e
 - Triggers de stock del área 3: actualiza `stock` a mano y duplica el incremento.
 - RLS de Supabase: olvida las políticas y todo regresa vacío. Si una consulta regresa cero filas teniendo datos, el diagnóstico es RLS.
 - Vistas: las crea sin `security_invoker` y quedan legibles sin sesión. Toda vista nueva lleva `WITH (security_invoker = true)` (D-11).
+- Funciones: PostgreSQL deja ejecutar a cualquiera cada función nueva. La migración que las crea termina con `REVOKE EXECUTE ON ALL FUNCTIONS IN SCHEMA public FROM anon, PUBLIC;` y el `GRANT` a `authenticated, service_role` (D-11).
 - Cualquier cosa que cruce dos áreas: pregunta antes.
