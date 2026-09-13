@@ -93,26 +93,36 @@ const REGLAS = [
 
 // ---------- Utilidades de animación ----------
 
-function useRevelar(raiz) {
+// Bloque que aparece al entrar en pantalla. Lo visto vive en el estado de React: si el bloque se vuelve a
+// pintar no se oculta de nuevo, y lo que ya quedó arriba de la pantalla (recarga a media página) se muestra.
+function Revelar({ className = '', refExterno, children, ...resto }) {
+  const propio = useRef(null);
+  const [visible, setVisible] = useState(sinMovimiento);
   useEffect(() => {
-    const elementos = raiz.current?.querySelectorAll('.lp-revelar') ?? [];
-    if (sinMovimiento()) {
-      elementos.forEach((e) => e.classList.add('lp-visible'));
-      return;
-    }
+    const el = propio.current;
+    if (visible || !el) return;
     const obs = new IntersectionObserver(
-      (entradas) =>
-        entradas.forEach((en) => {
-          if (en.isIntersecting) {
-            en.target.classList.add('lp-visible');
-            obs.unobserve(en.target);
-          }
-        }),
-      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+      ([en]) => {
+        if (en.isIntersecting || en.boundingClientRect.bottom < 0) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.1 }
     );
-    elementos.forEach((e) => obs.observe(e));
+    obs.observe(el);
     return () => obs.disconnect();
-  }, [raiz]);
+  }, [visible]);
+  const unir = (nodo) => {
+    propio.current = nodo;
+    if (typeof refExterno === 'function') refExterno(nodo);
+    else if (refExterno) refExterno.current = nodo;
+  };
+  return (
+    <div ref={unir} className={`lp-revelar ${visible ? 'lp-visible' : ''} ${className}`} {...resto}>
+      {children}
+    </div>
+  );
 }
 
 function useAlVer(umbral = 0.3) {
@@ -666,7 +676,7 @@ function Cifras() {
   const [ref, visto] = useAlVer(0.35);
   return (
     <section id="cifras" className="max-w-6xl mx-auto px-6 py-20 scroll-mt-24">
-      <div ref={ref} className="lp-panel-cifras lp-revelar px-10 py-12 max-[640px]:px-6">
+      <Revelar refExterno={ref} className="lp-panel-cifras px-10 py-12 max-[640px]:px-6">
         <div className="lp-grano" />
         <div className="relative grid grid-cols-[1fr_1.6fr] gap-10 items-center max-[900px]:grid-cols-1">
           <div>
@@ -695,7 +705,7 @@ function Cifras() {
             ))}
           </div>
         </div>
-      </div>
+      </Revelar>
     </section>
   );
 }
@@ -722,7 +732,7 @@ function Flujo() {
   return (
     <section id="flujo" className="max-w-6xl mx-auto px-6 py-20 scroll-mt-24">
       <div className="grid grid-cols-[1fr_1.3fr] gap-14 max-[900px]:grid-cols-1">
-        <div className="lp-revelar min-[901px]:sticky min-[901px]:top-32 self-start">
+        <Revelar className="min-[901px]:sticky min-[901px]:top-32 self-start">
           <div className="lp-ceja">
             <b>[</b> De punta a punta <b>]</b>
           </div>
@@ -734,7 +744,7 @@ function Flujo() {
             cobra contabilidad paga la comisión y el impuesto, y marketing mide contra ventas
             reales.
           </p>
-        </div>
+        </Revelar>
         <div ref={lista} className="relative pl-14">
           <div className="lp-linea" style={{ '--avance': avance }}>
             <span />
@@ -748,8 +758,8 @@ function Flujo() {
               <div className="lp-nodo absolute -left-14 top-0 w-10 h-10 rounded-full border border-border bg-surface flex items-center justify-center font-mono text-[13px] text-text-dim">
                 {String(i + 1).padStart(2, '0')}
               </div>
-              <div
-                className="lp-tarjeta lp-revelar px-5 py-4"
+              <Revelar
+                className="lp-tarjeta px-5 py-4"
                 style={{ '--retraso': '80ms' }}
                 onPointerMove={iluminar}
               >
@@ -760,7 +770,7 @@ function Flujo() {
                   <div className="text-[17px] font-semibold mt-1.5">{p.titulo}</div>
                   <div className="text-[13px] text-text-dim mt-1.5 leading-relaxed">{p.texto}</div>
                 </div>
-              </div>
+              </Revelar>
             </div>
           ))}
         </div>
@@ -811,19 +821,19 @@ function Reglas() {
   const [ref, visto] = useAlVer(0.3);
   return (
     <section id="reglas" className="max-w-6xl mx-auto px-6 py-20 scroll-mt-24">
-      <div className="lp-revelar text-center max-w-2xl mx-auto">
+      <Revelar className="text-center max-w-2xl mx-auto">
         <div className="lp-ceja">
           <b>[</b> Reglas que no se rompen <b>]</b>
         </div>
         <h2 className="text-[40px] leading-[1.05] font-bold tracking-[-0.03em] mt-4 m-0">
           La base dice que no, aunque la pantalla se equivoque.
         </h2>
-      </div>
+      </Revelar>
       <div ref={ref} className="grid grid-cols-3 gap-4 mt-12 max-[960px]:grid-cols-1">
         {REGLAS.map((r, i) => (
-          <div
+          <Revelar
             key={r.titulo}
-            className="lp-tarjeta lp-revelar p-5"
+            className="lp-tarjeta p-5"
             style={{ '--retraso': `${i * 120}ms` }}
             onPointerMove={iluminar}
           >
@@ -831,7 +841,7 @@ function Reglas() {
               <div className="text-[15px] font-semibold mb-4">{r.titulo}</div>
               <Terminal comando={r.comando} respuesta={r.respuesta} activo={visto} />
             </div>
-          </div>
+          </Revelar>
         ))}
       </div>
     </section>
@@ -841,7 +851,7 @@ function Reglas() {
 function Modulos() {
   return (
     <section id="modulos" className="max-w-6xl mx-auto px-6 py-20 scroll-mt-24">
-      <div className="lp-revelar flex items-end justify-between gap-6 flex-wrap">
+      <Revelar className="flex items-end justify-between gap-6 flex-wrap">
         <div>
           <div className="lp-ceja">
             <b>[</b> Siete módulos <b>]</b>
@@ -854,14 +864,14 @@ function Modulos() {
           Todos se ven; cada quien captura solo en lo de su rol. La coordinación ve el resumen de
           las seis.
         </p>
-      </div>
+      </Revelar>
       <div className="grid grid-cols-4 gap-3.5 mt-10 max-[960px]:grid-cols-2 max-[520px]:grid-cols-1">
         {MODULOS.map((m, i) => {
           const Icono = ICONO_MODULO[m.id];
           return (
-            <div
+            <Revelar
               key={m.id}
-              className={`lp-tarjeta lp-revelar px-5 py-5 ${i === 0 ? 'col-span-2 max-[520px]:col-span-1' : ''}`}
+              className={`lp-tarjeta px-5 py-5 ${i === 0 ? 'col-span-2 max-[520px]:col-span-1' : ''}`}
               style={{ '--retraso': `${i * 70}ms` }}
               onPointerMove={iluminar}
             >
@@ -872,7 +882,7 @@ function Modulos() {
                 <div className="text-[14px] font-semibold">{m.etiqueta}</div>
                 <div className="text-[12px] text-text-dim mt-1">{m.subtitulo}</div>
               </div>
-            </div>
+            </Revelar>
           );
         })}
       </div>
@@ -883,7 +893,7 @@ function Modulos() {
 function Final() {
   return (
     <section className="max-w-6xl mx-auto px-6 pt-10 pb-24">
-      <div className="lp-panel-cifras lp-revelar px-10 py-16 text-center max-[640px]:px-6">
+      <Revelar className="lp-panel-cifras px-10 py-16 text-center max-[640px]:px-6">
         <div className="lp-grano" />
         <div className="relative">
           <img
@@ -908,7 +918,7 @@ function Final() {
             </a>
           </div>
         </div>
-      </div>
+      </Revelar>
     </section>
   );
 }
@@ -916,8 +926,6 @@ function Final() {
 // Página pública de entrada. Si ya hay sesión, pasa directo a la app.
 export default function Landing() {
   const { session, cargando } = useAuth();
-  const raiz = useRef(null);
-  useRevelar(raiz);
 
   useEffect(() => {
     const mover = (e) => {
@@ -932,7 +940,7 @@ export default function Landing() {
   if (!cargando && session) return <Navigate to="/app" replace />;
 
   return (
-    <div ref={raiz} className="lp">
+    <div className="lp">
       <Particulas />
       <LuzCursor />
       <div className="lp-orbe lp-orbe--a" />
