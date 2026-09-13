@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
-import { datos, limpiar } from '@/lib/consulta';
+import { datos, uno, limpiar } from '@/lib/consulta';
 
 // Área 2 · Comercializadores. El folio COM-000001 lo pone el trigger (RN-A2-11); nunca hay DELETE (RN-A2-10).
 
@@ -21,10 +21,15 @@ export async function guardarCliente(c) {
     dias_credito:
       c.dias_credito === '' || c.dias_credito === undefined ? undefined : Number(c.dias_credito),
   });
-  const q = c.id_cliente
-    ? supabase.from('clientes').update(fila).eq('id_cliente', c.id_cliente)
-    : supabase.from('clientes').insert(fila);
-  return q.then(datos);
+  if (c.id_cliente) {
+    return supabase.from('clientes').update(fila).eq('id_cliente', c.id_cliente).then(datos);
+  }
+  return supabase
+    .from('clientes')
+    .insert(fila)
+    .select('id_cliente, numero_comercializador, nombre_empresa')
+    .single()
+    .then(uno);
 }
 
 // RN-A2-10: baja lógica; conserva sus facturas y desaparece de selectores y de v_clientes_activos

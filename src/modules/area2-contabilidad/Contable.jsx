@@ -256,9 +256,30 @@ function FormCabecera({ onCreada, onCancelar }) {
   const [f, setF] = useState({ fecha: hoyIso() });
   const [error, setError] = useState('');
   const [enviando, setEnviando] = useState(false);
-  if (catalogos.cargando) return <Cargando />;
+  const [altaCliente, setAltaCliente] = useState(false);
+  if (catalogos.cargando && !catalogos.datos) return <Cargando />;
   if (catalogos.error) return <Mensaje>{mensajeDeError(catalogos.error)}</Mensaje>;
   const [clientes, agentes] = catalogos.datos;
+
+  if (altaCliente) {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="text-[12.5px] text-text-dim">
+          Nuevo comercializador. Al guardarlo queda seleccionado en la factura.
+        </div>
+        <FormCliente
+          inicial={{ dias_credito: 30 }}
+          onListo={async (creado) => {
+            setAltaCliente(false);
+            if (creado?.id_cliente) {
+              await catalogos.recargar();
+              setF((x) => ({ ...x, id_cliente: String(creado.id_cliente) }));
+            }
+          }}
+        />
+      </div>
+    );
+  }
 
   async function guardar(e) {
     e.preventDefault();
@@ -276,6 +297,15 @@ function FormCabecera({ onCreada, onCancelar }) {
 
   return (
     <form onSubmit={guardar} className="flex flex-col gap-4">
+      <div className="flex justify-end -mb-2">
+        <button
+          type="button"
+          onClick={() => setAltaCliente(true)}
+          className="text-[12px] text-accent hover:underline cursor-pointer"
+        >
+          + Nuevo comercializador
+        </button>
+      </div>
       <Campo etiqueta="Comercializador" ayuda="Solo comercializadores activos">
         <Selector
           opciones={clientes.map((c) => ({
@@ -781,8 +811,8 @@ function FormCliente({ inicial, onListo }) {
     setErrores({});
     setError('');
     try {
-      await guardarCliente({ ...r.data, id_cliente: inicial.id_cliente });
-      onListo();
+      const creado = await guardarCliente({ ...r.data, id_cliente: inicial.id_cliente });
+      onListo(inicial.id_cliente ? null : creado);
     } catch (err) {
       setError(mensajeDeError(err));
     }
