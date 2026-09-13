@@ -741,12 +741,12 @@ Sigue la plantilla global `docs/plantillas/REPORTE_FINAL_LIDER.md`:
 Un agente o integrante que se tope con alguna de estas **no decide por su cuenta**: la registra y la escala al líder.
 
 1. **Tasa de IVA.** ¿Siempre 16%, o hay productos exentos o tasa fronteriza? Afecta a `fn_tasa_iva()`; si cambia, la función pasa a leer `parametros_fiscales` del área 5 por producto o por cliente.
-2. **Cancelación y stock.** ¿Cancelar una factura debe reintegrar el stock descontado? Hoy no ocurre (RN-A2-07). Requiere que el área 3 defina una devolución; es también su pregunta abierta 3. Decidir con Davor el domingo 13 (día 1).
+2. **Cerrada (#41, I-11).** Cancelar una factura no reintegra stock: solo cambia `estado_pago` a `CANCELADO` (RN-A2-07). Una devolución se registra en el Área 3 como `ajustes_inventario` con motivo `DEVOLUCION`.
 3. **Pagos parciales.** ~~¿Se registran como monto o solo como estado?~~ **Resuelta para esta versión:** solo como estado `PARCIAL`, sin tabla de abonos; `fecha_cobro` se llena únicamente al llegar a `PAGADO`. Si Finanzas exige montos parciales, se abre una tabla `pagos_cliente` en una versión posterior.
 4. **Folio fiscal.** ~~¿Se requiere CFDI o es registro interno?~~ **Resuelta:** registro interno de control; se guarda `uuid_cfdi` de forma opcional cuando el timbrado ocurra fuera del sistema. El área 5 lo lee por `v_iva_trasladado_periodo`.
-5. **Varios RFC por comercializador.** ¿Un mismo cliente puede tener varias sucursales con RFC distinto? El modelo asume un RFC por cliente; si se necesita, cada sucursal es un cliente con el mismo `nombre_empresa` y distinto `numero_comercializador`.
-6. **Vencimiento por factura.** ¿Se permite capturar una `fecha_vencimiento` distinta a la calculada por días de crédito? Hoy sí, si se manda en el insert; si no, se calcula.
-7. **Precio unitario.** ¿Se precarga desde `productos.precio_venta_sugerido` (columna que agrega el área 1) o siempre se captura? Recomendación: precargar y permitir editar.
+5. **Cerrada (#45).** Un RFC por cliente. Si una empresa tiene sucursales con RFC distinto, cada sucursal es un cliente con el mismo `nombre_empresa` y distinto `numero_comercializador`.
+6. **Cerrada (#46).** Se permite capturar una `fecha_vencimiento` distinta en el insert; si no se manda, `fn_valida_factura` la calcula con los días de crédito del cliente (RN-A2-09).
+7. **Cerrada (#51).** El formulario precarga `productos.precio_venta_sugerido` (columna del Área 1) y permite editarlo; el precio que vale es el que queda en `detalle_factura.precio_unitario`.
 
 ---
 
