@@ -74,9 +74,9 @@ BEGIN
     SELECT isn_estimado INTO v_num FROM v_retenciones_area5 WHERE id_periodo = v_per AND entidad_federativa = 'Chiapas';
     IF v_num IS NULL OR v_num <= 0 THEN RAISE EXCEPTION 'RN-A4-16 falló: ISN de Chiapas = %', v_num; END IF;
 
-    -- ---------- Estados con un periodo propio de 2026-10 ----------
-    INSERT INTO metas (id_agente, periodo, monto_meta) SELECT id_agente, '2026-10', 100000 FROM agentes_ventas WHERE estatus = 'ACTIVO';
-    INSERT INTO periodos_nomina (tipo, fecha_inicio, fecha_fin) VALUES ('MENSUAL', DATE '2026-10-01', DATE '2026-10-31') RETURNING id_periodo INTO v_per_oct;
+    -- ---------- Estados con un periodo propio de 2030-10 ----------
+    INSERT INTO metas (id_agente, periodo, monto_meta) SELECT id_agente, '2030-10', 100000 FROM agentes_ventas WHERE estatus = 'ACTIVO';
+    INSERT INTO periodos_nomina (tipo, fecha_inicio, fecha_fin) VALUES ('MENSUAL', DATE '2030-10-01', DATE '2030-10-31') RETURNING id_periodo INTO v_per_oct;
 
     -- RN-A4-13: saltar de ABIERTO a REVISADO se rechaza
     v_ok := FALSE;
@@ -87,14 +87,14 @@ BEGIN
     IF NOT v_ok THEN RAISE EXCEPTION 'RN-A4-13 falló: aceptó salto de estado'; END IF;
 
     -- RN-A4-03: sin meta no hay cálculo
-    DELETE FROM metas WHERE periodo = '2026-10' AND id_agente = v_jorge;
+    DELETE FROM metas WHERE periodo = '2030-10' AND id_agente = v_jorge;
     v_ok := FALSE;
     BEGIN
         PERFORM fn_calcular_periodo(v_per_oct, 'calc@sigfevak.mx');
     EXCEPTION WHEN OTHERS THEN IF SQLERRM LIKE 'RN-A4-03%' THEN v_ok := TRUE; ELSE RAISE; END IF;
     END;
     IF NOT v_ok THEN RAISE EXCEPTION 'RN-A4-03 falló: calculó sin meta'; END IF;
-    INSERT INTO metas (id_agente, periodo, monto_meta) VALUES (v_jorge, '2026-10', 100000);
+    INSERT INTO metas (id_agente, periodo, monto_meta) VALUES (v_jorge, '2030-10', 100000);
 
     PERFORM fn_calcular_periodo(v_per_oct, 'calc@sigfevak.mx');
     IF (SELECT estatus FROM periodos_nomina WHERE id_periodo = v_per_oct) <> 'CALCULADO' THEN RAISE EXCEPTION 'El cálculo no dejó el periodo en CALCULADO'; END IF;
