@@ -52,7 +52,7 @@ Todas las tablas de las seis áreas en una sola base PostgreSQL (D-02). Este arc
 | `v_clientes_activos` | Área 2 | 6 | Clientes con `activo = true` (I-10) |
 | `v_ventas_cobradas_agente` | Área 4 | 4 | Facturas pagadas por agente y mes de cobro |
 | `v_cumplimiento_meta` | Área 4 | 4, 6 | Ventas cobradas vs meta por agente |
-| `v_retenciones_area5` | Área 4 | 5 | ISR retenido, IMSS obrero, base ISN por entidad y periodo |
+| `v_retenciones_area5` | Área 4 | 5 | ISR retenido, IMSS obrero, base ISN e ISN estimado con la tasa de la entidad, por entidad y periodo |
 | `v_desempeno_agente_zona` | Área 4 | 6 | Cumplimiento por agente y zona |
 | `v_obligaciones_pendientes`, `v_obligaciones_vencidas`, `v_calendario_fiscal`, `v_alertas_activas`, `v_licencias_por_vencer` | Área 5 | 5, tablero | Obligaciones por estado, próximos 30 días, alertas, licencias |
 | `v_pagos_por_institucion` | Área 5 | 5, Coordinación | Pagos por institución y periodo |
@@ -105,14 +105,14 @@ Todas las tablas de las seis áreas en una sola base PostgreSQL (D-02). Este arc
 | --- | --- | --- | --- | --- |
 | I-01 | Área 1 | Área 3 | Columnas aditivas en `productos` y `entradas_producto` (las hace el Área 1); cambio de fórmula en `fn_entrada_producto` y en `v_entradas_area1` a `(costo + flete + impuestos) × tipo_cambio` (lo hace el Área 3). Compatible hacia atrás por los defaults | Cerrada dom 13 (#1): `entradas_producto` nace con `flete_unitario`, `impuestos_unitarios` y `tipo_cambio`; `fn_entrada_producto` y `v_entradas_area1` ya usan la fórmula |
 | I-02 | Área 4 | Área 2 | `fecha_cobro`, `fecha_vencimiento` y `subtotal` en `facturas`; `id_agente` ya es obligatorio; `v_cartera_agente` | Cerrada dom 13 (#42): columnas y vista aplicadas; el seed reproduce el ejemplo del Área 4 (Jorge Mendoza cobra 560,000 sin IVA en 2026-09, 2 clientes nuevos, cartera vencida 3 %) |
-| I-03 | Área 4 | Área 5 | Tasas de ISN por estado cargadas en `parametros_legales` | Abrir issue jue 11 |
+| I-03 | Área 4 | Área 5 | Tasas de ISN por estado cargadas en `parametros_legales` | Mitad cerrada dom 13 (#62): `ISN` Chiapas 0.02 cargada en `parametros_legales` con el valor del contexto del Área 5; falta que el Área 5 publique `v_tasas_isn` |
 | I-04 | Área 5 ↔ Área 1 | ambas | El Área 1 publica `v_entradas_importacion`; el Área 5 devuelve el monto de impuestos aduanales por entrada (IGI, DTA, IVA de importación) para llenar `impuestos_unitarios`. Mientras no exista, se captura a mano con default 0 | Mitad cerrada dom 13 (#21): `v_entradas_importacion` publicada; el Área 5 lee la vista y el monto se captura a mano en `impuestos_unitarios` |
-| I-06 | Área 4 | Área 1 | `v_mano_obra_produccion` para bonos de productividad; solo lectura, ya publicada | Sin issue |
+| I-06 | Área 4 | Área 1 | `v_mano_obra_produccion` para bonos de productividad; solo lectura, ya publicada | Cerrada dom 13 (#63): vista publicada por el Área 1; el Área 4 la documenta como insumo futuro |
 | I-07 | Área 5 | Área 2 | `v_iva_trasladado_periodo`: IVA trasladado y UUID de CFDI por mes, para la obligación mensual de IVA | Cerrada dom 13 (#43): vista aplicada; `uuid_cfdi` opcional en `facturas` |
 | I-08 | Área 5 | Coordinador | Tabla `usuarios` con `id_usuario UUID` y `rol`, referenciada desde obligaciones, pagos, alertas y bitácora; `pg_cron` para alertas o botón manual "Actualizar alertas" | Migración base del coordinador |
 | I-09 | Área 6 | Área 3 | La migración base **no crea** `marketing` ni `clientes_marketing`; el Área 6 crea sus ocho tablas. Baja lógica en `productos` (columna `activo`) en vez de borrado físico | Cerrada dom 13 (#2): la base no crea `marketing` ni `clientes_marketing`; `productos.activo` existe |
 | I-10 | Área 6 | Área 2 | Columna `activo` y baja lógica en `clientes`; lectura de `facturas` pagadas; `v_clientes_activos` | Cerrada dom 13 (#44): `clientes.activo`, trigger que impide facturar a inactivos y `v_clientes_activos` aplicados |
-| I-05 | Área 6 | Área 4 | `v_desempeno_agente_zona` | Ya definida por el Área 4 |
+| I-05 | Área 6 | Área 4 | `v_desempeno_agente_zona` | Cerrada dom 13 (#63): vista aplicada con zona, región, meta, cumplimiento y ventas cobradas por agente y periodo |
 | I-11 | Área 2 | Área 3 | Definir si cancelar una factura reintegra stock (pregunta abierta 2 del Área 2 y 3 del Área 3). Hoy no se reintegra; una devolución sería un ajuste de inventario | Cerrada dom 13 (#3): cancelar no reintegra stock; una devolución se registra como `ajustes_inventario` con motivo `DEVOLUCION` |
-| I-12 | Área 2 | Área 4 | Un solo seed de `agentes_ventas` para no duplicar agentes entre las dos áreas | Acordar en seed |
+| I-12 | Área 2 | Área 4 | Un solo seed de `agentes_ventas` para no duplicar agentes entre las dos áreas | Cerrada dom 13 (#61): los 5 agentes viven en el seed base; el Área 4 solo les agrega datos laborales |
 | I-13 | Área 2 | Área 1 | Leer `productos.precio_venta_sugerido` para precargar el precio unitario del renglón | Solo lectura, sin issue |
