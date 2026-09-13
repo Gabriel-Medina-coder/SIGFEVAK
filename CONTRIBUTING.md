@@ -36,8 +36,12 @@ Reglas del flujo:
 
 ```text
 pnpm install            dependencias (solo pnpm)
-pnpm dev                frontend en http://localhost:5173
+pnpm dev                app en http://localhost:5173 (requiere .env en la raíz)
 pnpm lint               prettier + oxlint
-supabase db push        aplica las migraciones al proyecto enlazado
-supabase db reset       recrea la base local con migraciones y seed (requiere Docker)
+pnpm build              compilación de producción
+node supabase/sql.mjs file supabase/tests/areaN/pruebas_areaN.sql   pruebas SQL de un área
+node supabase/sql.mjs file supabase/tests/coord/seguridad.sql       verifica que nada se lea sin sesión
+node supabase/sql.mjs migrate supabase/migrations/<archivo>.sql     aplica una migración (solo coordinación)
 ```
+
+No hay Supabase CLI ni Docker. Las migraciones las aplica la coordinación con el token de `.env.supabase`, que no se sube. Quien escriba una migración la entrega en su PR y la coordinación la aplica al mergear (D-10).

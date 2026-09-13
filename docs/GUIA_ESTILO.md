@@ -73,14 +73,22 @@ Viven en `src/components/` (propiedad del coordinador) y son los únicos bloques
 | Componente | Props | Para qué |
 | --- | --- | --- |
 | `KpiCard` | `label`, `value`, `delta`, `up`, `sub?` | Tarjeta de indicador. `value` en mono 22px; `delta` verde si `up`, rojo si no |
-| `Panel` | `title`, `children` | Contenedor con cabecera y borde; envuelve tablas, gráficas y listas |
-| `Table` | `headers[]`, `rows[][]` | Tabla con encabezados en mayúsculas, hover de fila, scroll horizontal, `min-width: 600` |
-| `Mono` | `children`, `style?` | Texto monoespaciado 12px para folios, montos y cantidades |
+| `Panel` | `title`, `acciones?`, `children` | Contenedor con cabecera y borde; envuelve tablas, gráficas y listas |
+| `Table` | `headers[]`, `rows[][]`, `vacio?`, `onRowClick?` | Tabla con encabezados en mayúsculas, hover de fila, scroll horizontal, `min-width: 600` |
+| `Mono` | `children`, `color?: text \| up \| down \| accent \| dim \| muted`, `bold?` | Texto monoespaciado 12px para folios, montos y cantidades |
 | `Tag` | `children`, `color: accent \| muted \| up \| down` | Píldora de categoría |
-| `StatusBadge` | `status`, `map` | `Tag` cuyo color sale de un mapa `{ estado: color }` |
+| `StatusBadge` | `status`, `map`, `etiquetas?` | `Tag` cuyo color sale de un mapa `{ estado: color }` |
 | `Sidebar`, `Topbar`, `Layout` | — | Estructura de la sección 2; una sola instancia en `App.jsx` |
 | Iconos | `size?` | SVG de 16x16 con `stroke="currentColor"` y `strokeWidth 1.3`. Solo los de la referencia más los que el coordinador agregue |
-| `Gráfica de barras` | `data[{label, value}]` | Barras con la última en `accent` y las demás en `surface-2` con borde. Sin librería de gráficas |
+| `GraficaBarras` | `data[{label, value, titulo?}]`, `alto?` | Barras con la última en `accent` y las demás en `surface-2` con borde. Sin librería de gráficas |
+| `Pestanas` | `opciones[{id, etiqueta}]`, `activa`, `onCambiar` | Divide una pantalla de área en secciones: catálogo, reportes, catálogos |
+| `Modal` | `abierto`, `titulo`, `onCerrar`, `ancho?` | Alta, edición y detalle con el mismo fondo y borde que `Panel`; cierra con Escape o clic fuera |
+| `FilaKpi`, `RejillaForm`, `Acciones`, `Texto` | `columnas`, `dim?`, `bold?` | Rejilla de KPI de 3 o 4 columnas, rejilla de formulario de 1 a 3, botonera alineada a la derecha y texto de celda |
+| `Campo`, `Entrada`, `AreaTexto`, `Selector`, `Boton`, `Mensaje`, `Cargando` | ver `Formulario.jsx` | Formularios de la sección 4. `Boton` con variante primario, secundario o peligro; `Mensaje` con tipo error, ok o info |
+| `mensajeDeError(error)` | — | Convierte un error de Postgres con `RN-AN-xx` en texto legible en español |
+| `useTopbar()` | `set({ acciones, subtitulo })` | Cada pantalla pone sus botones en la topbar y los quita al salir |
+
+Todo se importa desde un solo lugar: `import { KpiCard, Panel, Table } from '@/components'`.
 
 Si un área necesita un componente que no existe (un formulario, un modal, un selector de fecha), abre un issue `area:transversal` `tipo:frontend` y el coordinador lo agrega a `src/components/` siguiendo estos tokens. Mientras tanto no se improvisa uno local.
 
@@ -117,13 +125,12 @@ Un estado nunca cambia de color entre áreas: "pendiente" de cobro es `accent`, 
 8. Cada pantalla de área tiene: fila de KPI, uno o más `Panel` con `Table`, y los botones de la topbar. Nada más hasta que el coordinador amplíe esta guía.
 9. Cuando dudes, abre `docs/referencia-ui/App.jsx` y copia el patrón que ya existe para tu módulo (hay uno por área).
 
-## 7. Cómo se traslada al proyecto real
+## 7. Cómo quedó en el proyecto
 
-Al inicializar Vite (fase 0, coordinador):
+- `src/index.css` tiene los tokens de la referencia tal cual.
+- `src/components/` tiene los componentes de la sección 3, uno por archivo, exportados desde `index.js`.
+- `src/App.jsx` define las rutas: `/` página de inicio, `/login`, y `/app` con el layout y los siete módulos, que cargan bajo demanda.
+- `src/lib/permisos.js` define los módulos del menú y qué rol escribe en cada uno. Las pantallas ocultan los botones con `puedeEscribir(rol, modulo)`; la base valida de todos modos.
+- Cada `src/modules/areaN-*/` ya está conectado a Supabase por sus servicios en `src/services/areaN/`.
 
-- `src/index.css` = `docs/referencia-ui/index.css` tal cual (imports de fuentes, `@theme`, reset, scrollbar).
-- `src/components/` = los componentes de la sección 3 extraídos de `App.jsx`, uno por archivo.
-- `src/App.jsx` = `Layout` con sidebar, topbar y `react-router` montando un módulo por ruta.
-- Cada `src/modules/areaN-*/` arranca con la pantalla equivalente de la referencia con datos de ejemplo, y el área la conecta a Supabase.
-
-Todo el proyecto es JavaScript (D-01). La referencia ya está convertida a JSX; si se vuelve a exportar desde Figma Make, se quitan las anotaciones de tipos antes de copiarla aquí. Nada de archivos `.ts` ni `.tsx` en el repo.
+Todo el proyecto es JavaScript (D-01). Si se vuelve a exportar algo desde Figma Make, se quitan las anotaciones de tipos antes de copiarlo. Nada de archivos `.ts` ni `.tsx` en el repo.

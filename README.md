@@ -128,7 +128,7 @@ SIGFEVAK/
 
 ## Primeros pasos
 
-Requisitos: Node 20 LTS, pnpm 9, Git, y opcionalmente Supabase CLI.
+Requisitos: Node 20 o superior, pnpm y Git. No se necesita Supabase CLI ni Docker: la base ya vive en el proyecto de Supabase de la coordinación.
 
 ```text
 # 1. Fork en GitHub, luego:
@@ -140,12 +140,34 @@ git config core.hooksPath .githooks
 # 2. Dependencias (nunca npm)
 pnpm install
 
-# 3. Variables de entorno
-cp .env.example .env        # los valores los proporciona la coordinación
+# 3. Variables de entorno: el archivo .env va en la raíz, junto a package.json
+cp .env.example .env        # ya trae la URL y la llave pública del proyecto
 
-# 4. Levantar el frontend
-pnpm dev
+# 4. Levantar la app
+pnpm dev                    # abre http://localhost:5173
 ```
+
+## Entrar a la app
+
+1. Con `pnpm dev` corriendo, abre `http://localhost:5173`. Aparece la página de inicio.
+2. Da clic en **Entrar** y escribe correo y contraseña.
+3. Entras al **Resumen General**. El menú lateral tiene los siete módulos; todos se ven, pero solo puedes capturar en los de tu rol.
+4. Para salir, usa el ícono junto a tu nombre al pie del menú.
+
+Cuentas de prueba, una por rol. Las contraseñas las da la coordinación y nunca se escriben en el repo.
+
+| Correo | Rol | Captura en |
+| --- | --- | --- |
+| `admin@sigfevak.mx` | ADMINISTRADOR | Todos los módulos y catálogos |
+| `almacen@sigfevak.mx` | ALMACEN | Entradas de Producción, Base de Productos |
+| `contador@sigfevak.mx` | CONTADOR | Registro Contable, Regulación y Pagos; calcula la nómina |
+| `gerente@sigfevak.mx` | GERENTE_VENTAS | Nómina: revisa y rechaza periodos |
+| `autorizador@sigfevak.mx` | AUTORIZADOR | Nómina y Regulación: autoriza, paga y concilia |
+| `marketing@sigfevak.mx` | MARKETING | Marketing |
+
+Para probar la separación de funciones usa dos cuentas: una calcula o registra y otra autoriza. La base rechaza que la misma persona haga ambas cosas.
+
+Sin sesión no se ve ningún dato: la base rechaza toda lectura anónima. Una cuenta nueva la crea la coordinación en Supabase Auth y le asigna el rol en la tabla `usuarios`.
 
 Si usas Claude Code, al abrir el repo se cargan automáticamente las reglas y las skills del proyecto. Para otras herramientas, apunta a [`AGENTS.md`](AGENTS.md).
 
@@ -194,8 +216,13 @@ Cada líder evalúa a su equipo con una matriz ponderada, puede reasignar tareas
 | Una consulta regresa vacío aunque hay datos | RLS sin política | Verifica que la tabla tenga política para `authenticated` |
 | El stock se duplicó | Alguien actualizó `productos.stock` a mano | Solo los triggers lo modifican (RN-A3-06) |
 | `pnpm install` falla por `engine-strict` | Usaste npm | Instala pnpm y borra `package-lock.json` |
+| La app no carga y la consola dice "Faltan VITE_SUPABASE_URL" | No existe `.env` en la raíz | Copia `.env.example` a `.env` y reinicia `pnpm dev` |
+| "Correo o contraseña incorrectos" | Contraseña distinta o cuenta sin crear | Pide a la coordinación que la restablezca en Supabase Auth |
+| Una pantalla dice "Tu sesión no tiene permiso para esta operación" | El rol no escribe en ese módulo | Entra con la cuenta del rol correcto |
+| No aparece el botón de autorizar | Tú calculaste o registraste ese registro | Autoriza con otra cuenta (RN-A4-15, RN-A5-18) |
 | El commit fue rechazado por el hook | Mensaje con rastro de IA o prefijo inválido | Reescribe: `areaN: verbo objeto #issue` |
 | Una migración falla al aplicar | Nombre fuera de formato u orden alfabético incorrecto | Revisa `supabase/migrations/README.md` |
+| Una vista nueva se lee sin sesión | Se creó sin `security_invoker` | Recréala con `WITH (security_invoker = true)` y corre `supabase/tests/coord/seguridad.sql` |
 
 ---
 

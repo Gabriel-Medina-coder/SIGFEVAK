@@ -61,11 +61,16 @@ supabase/
   migrations/            AAAAMMDD_HHMM_aN_descripcion.sql
   seed/                  seed_areaN.sql
   tests/areaN/           pruebas SQL de triggers y funciones
+  tests/coord/           prueba de seguridad: nada legible sin sesión
+  sql.mjs                aplica migraciones y corre SQL (solo coordinación)
 src/
   lib/supabaseClient.js  único cliente; nadie crea otro
+  lib/                   sesión (auth.jsx), permisos por rol, formato, useDatos, exportar CSV
+  components/            componentes compartidos (coordinador); se importan desde @/components
+  paginas/               landing, login y guardia de sesión
   services/areaN/        acceso a datos por área
   modules/areaN-*/       pantallas React por área
-  components/            componentes compartidos (coordinador)
+  modules/resumen/       resumen general de la coordinación
 ```
 
 ## Convenciones de código
@@ -77,16 +82,21 @@ src/
 ## Comandos
 
 ```text
-pnpm install            instalar dependencias (nunca npm install)
-pnpm dev                levantar el frontend
+pnpm install            dependencias (solo pnpm)
+pnpm dev                app en http://localhost:5173 (requiere .env en la raíz)
 pnpm lint               prettier + oxlint
-supabase db push        aplicar migraciones al proyecto
-supabase db reset       recrear la base local desde cero con migraciones y seed
+pnpm build              compilación de producción
+node supabase/sql.mjs file supabase/tests/areaN/pruebas_areaN.sql   pruebas SQL de un área
+node supabase/sql.mjs file supabase/tests/coord/seguridad.sql       verifica que nada se lea sin sesión
+node supabase/sql.mjs migrate supabase/migrations/<archivo>.sql     aplica una migración (solo coordinación)
 ```
+
+No hay Supabase CLI ni Docker. Las migraciones las aplica la coordinación con el token de `.env.supabase`, que no se sube. Quien escriba una migración la entrega en su PR y la coordinación la aplica al mergear (D-10).
 
 ## Dónde suele fallar la IA en este proyecto
 
 - Cálculos fiscales del área 5 (ISR, IVA, IGI, DTA, ISN): inventa tasas. Léelas del `CONTEXTO.md` o de `parametros_legales`.
 - Triggers de stock del área 3: actualiza `stock` a mano y duplica el incremento.
 - RLS de Supabase: olvida las políticas y todo regresa vacío. Si una consulta regresa cero filas teniendo datos, el diagnóstico es RLS.
+- Vistas: las crea sin `security_invoker` y quedan legibles sin sesión. Toda vista nueva lleva `WITH (security_invoker = true)` (D-11).
 - Cualquier cosa que cruce dos áreas: pregunta antes.

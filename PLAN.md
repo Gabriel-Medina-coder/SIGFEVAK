@@ -95,7 +95,7 @@ Estas decisiones son del grupo de líderes + coordinador. Sin ellas los equipos 
 | Lenguaje | JavaScript en todo el repo: `.js` y `.jsx`, nunca `.ts` ni `.tsx`. JSDoc opcional para documentar | Menos fricción para 31 personas de niveles distintos; sin paso de compilación de tipos que bloquee PRs. La referencia de UI ya está convertida a JSX |
 | Acceso a datos | `supabase-js` | Es el cliente oficial de la API de Supabase; consultas anidadas sin GraphQL, como ya documentó el Área 3 |
 | Lógica de negocio | Funciones y triggers de PostgreSQL | Al no haber backend propio, las reglas críticas (stock, comisiones, obligaciones) viven en la base y nadie las salta desde el editor SQL |
-| Migraciones | Supabase CLI (`supabase db push`, `supabase db reset`) | Herramienta oficial; formato de nombre según D-09 |
+| Migraciones | Archivos SQL en `supabase/migrations/` aplicados por la coordinación con `supabase/sql.mjs` sobre la API de administración de Supabase | Sin CLI ni Docker en las máquinas del equipo (D-10); formato de nombre según D-09 |
 | Autenticación y roles | Supabase Auth + tabla `usuarios` con columna `rol` | Cubre los roles que pide el Área 5 (administrador, contador, autorizador) y la separación de funciones del Área 4 |
 | Seguridad por fila | RLS activado en todas las tablas, política mínima para `authenticated` | Sin RLS Supabase regresa vacío; con políticas mínimas basta para el alcance |
 | UI | Tailwind CSS v4 con los tokens de `docs/GUIA_ESTILO.md`, derivados del dashboard de Figma Make en `docs/referencia-ui/` | Un solo estilo visual para las 6 áreas: tema oscuro, DM Sans + JetBrains Mono, componentes compartidos en `src/components/`; sin librerías de componentes, iconos ni gráficas |

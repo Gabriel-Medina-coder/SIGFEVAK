@@ -6,13 +6,15 @@ Cada decisión tiene contexto, opciones, decisión y consecuencias. Una decisió
 | --- | --- | --- | --- |
 | D-01 | Stack: React + Vite, API de Supabase, PostgreSQL en Supabase, pnpm | Cerrada | 2026-09-11 |
 | D-02 | Una sola base de datos compartida; fronteras lógicas por área | Cerrada | 2026-09-11 |
-| D-03 | El Área 1 amplía el catálogo del Área 3 con migraciones aditivas | Recomendada; la cierran líderes 1 y 3 | Vie 11 sep |
+| D-03 | El Área 1 amplía el catálogo del Área 3 con migraciones aditivas | Cerrada | 2026-09-13 |
 | D-04 | "Pago automático" del Área 5 = orden de pago + línea de captura + autorización + comprobante. Sin banco real | Cerrada | 2026-09-11 |
 | D-05 | Una sola app React con un módulo por área | Cerrada | 2026-09-11 |
 | D-06 | Todo en español | Cerrada | 2026-09-11 |
 | D-07 | Plazo: equipos del domingo 13 al jueves 17 de septiembre de 2026 (5 días); congelamiento miércoles 16 a las 18:00 | Cerrada | 2026-09-12 |
 | D-08 | Cero rastro de IA en commits, PRs, issues y documentos | Cerrada | 2026-09-11 |
 | D-09 | Migraciones con nombre `AAAAMMDD_HHMM_aN_descripcion.sql` | Cerrada | 2026-09-11 |
+| D-10 | Migraciones aplicadas por la coordinación sin Supabase CLI ni Docker | Cerrada | 2026-09-13 |
+| D-11 | Ningún dato es legible sin sesión: vistas con `security_invoker` y sin privilegios para `anon` | Cerrada | 2026-09-13 |
 
 ---
 
@@ -36,7 +38,7 @@ Cada decisión tiene contexto, opciones, decisión y consecuencias. Una decisió
 
 **Decisión recomendada.** El Área 1 solo agrega: columnas opcionales en `productos` y `entradas_producto`, tablas nuevas propias. El único cambio en código del Área 3 es la fórmula de capital en `fn_entrada_producto`, compatible hacia atrás porque flete e impuestos tienen default 0. Detalle en `PLAN.md` D-03.
 
-**Pendiente.** Acuerdo de los líderes 1 y 3 el domingo 13, registrado en el issue de integración I-01.
+**Cerrada el domingo 13 (I-01, issues #1 y #20).** `entradas_producto` nació con `flete_unitario`, `impuestos_unitarios` y `tipo_cambio` en la migración del Área 3, y `fn_entrada_producto` y `v_entradas_area1` ya usan la fórmula. El Área 1 agregó el resto de sus columnas y tablas sin tocar las del Área 3.
 
 ## D-04 · Alcance de "pago automático"
 
@@ -61,3 +63,19 @@ Cada decisión tiene contexto, opciones, decisión y consecuencias. Una decisió
 ## D-09 · Nombre de migraciones
 
 **Decisión.** `AAAAMMDD_HHMM_aN_descripcion.sql`, con `a00` para lo compartido del coordinador. Nunca se edita una migración aplicada. El workflow `sql-lint.yml` lo verifica.
+
+## D-10 · Migraciones sin CLI
+
+**Contexto.** Instalar Supabase CLI y Docker en 31 máquinas no cabe en 5 días, y la base ya vive en un proyecto de Supabase en la nube.
+
+**Decisión.** Las migraciones son archivos SQL en `supabase/migrations/` con el formato de D-09. La coordinación las aplica y las registra con `node supabase/sql.mjs migrate <archivo>`, que usa la API de administración de Supabase y el token de `.env.supabase` (ignorado por git). El mismo script corre seeds y pruebas SQL.
+
+**Consecuencias.** Nadie más necesita el token. Quien escribe una migración la entrega en su PR; se aplica al mergear. `supabase db push` y `supabase db reset` ya no forman parte del flujo.
+
+## D-11 · Acceso solo con sesión
+
+**Contexto.** Las vistas de PostgreSQL corren con los permisos de su dueño y se saltan el RLS de las tablas. Con la llave pública, sin iniciar sesión, se leían las 42 vistas, incluidos nómina, RFC y CLABE, y se ejecutaban funciones como `fn_marcar_vencidas`.
+
+**Decisión.** La migración `20260913_0800_a00_seguridad_anon.sql` pone `security_invoker` en todas las vistas y quita al rol `anon` todo privilegio sobre tablas, vistas, secuencias y funciones, también para lo que se cree después. Toda vista nueva se crea con `WITH (security_invoker = true)`.
+
+**Consecuencias.** Sin sesión no se lee ni se ejecuta nada. Con sesión, cada vista respeta el RLS de sus tablas. `supabase/tests/coord/seguridad.sql` falla si una vista o una función vuelve a quedar expuesta; se corre después de cada migración.
