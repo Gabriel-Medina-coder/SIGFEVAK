@@ -112,12 +112,14 @@ SIGFEVAK/
 │   ├── EMPIEZA_AQUI.md      Guía de arranque para líderes e integrantes
 │   ├── CRONOGRAMA.md        Fechas, hitos y alcance mínimo por área
 │   ├── FLUJO_APP.md         La app de punta a punta y el tablero de control
+│   ├── HISTORIA_FLUJO.md    El flujo contado como historia, con capturas de la app real
+│   ├── evidencias/          Capturas generales de la historia
 │   ├── plantillas/          Plantillas de CONTEXTO, ESTADO, TAREAS, EVALUACION y reporte
 │   ├── referencia-ui/       Dashboard de referencia (App.jsx, index.css)
 │   └── areaN-*/             CONTEXTO · ESTADO · TAREAS · EVALUACION · evidencias · originales
 ├── supabase/
 │   ├── migrations/          AAAAMMDD_HHMM_aN_descripcion.sql
-│   ├── seed/                seed_areaN.sql
+│   ├── seed/                seed_areaN.sql y seed_historico.sql (dos años de operación)
 │   └── tests/               Pruebas SQL de triggers y funciones por área
 └── src/
     ├── lib/                 Cliente Supabase único
@@ -165,6 +167,8 @@ Cuentas de prueba, una por rol. Las contraseñas las da la coordinación y nunca
 | `autorizador@sigfevak.mx` | AUTORIZADOR | Nómina y Regulación: autoriza, paga y concilia |
 | `marketing@sigfevak.mx` | MARKETING | Marketing |
 
+Para ver un recorrido completo antes de entrar, lee [`docs/HISTORIA_FLUJO.md`](docs/HISTORIA_FLUJO.md): una semana de la empresa en 15 capítulos con capturas.
+
 Para probar la separación de funciones usa dos cuentas: una calcula o registra y otra autoriza. La base rechaza que la misma persona haga ambas cosas.
 
 Sin sesión no se ve ningún dato: la base rechaza toda lectura anónima. Una cuenta nueva la crea la coordinación en Supabase Auth y le asigna el rol en la tabla `usuarios`.
@@ -202,6 +206,7 @@ La coordinación construye las seis áreas por bloques, con el líder de cada á
 | [`docs/EMPIEZA_AQUI.md`](docs/EMPIEZA_AQUI.md) | Todos | Guía de arranque: qué hacer el primer día y dónde está cada cosa |
 | [`docs/CRONOGRAMA.md`](docs/CRONOGRAMA.md) | Todos | Fechas, hitos y alcance mínimo por área |
 | [`docs/FLUJO_APP.md`](docs/FLUJO_APP.md) | Todos | La app de punta a punta: pantallas, roles, flujo de negocio en 14 pasos y tablero de control |
+| [`docs/HISTORIA_FLUJO.md`](docs/HISTORIA_FLUJO.md) | Todos | El mismo flujo grabado en la app real: 15 capítulos con capturas y cifras de la base |
 
 ## Equipo
 
