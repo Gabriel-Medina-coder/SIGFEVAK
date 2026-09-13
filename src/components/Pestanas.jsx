@@ -2,7 +2,7 @@
 // opciones: [{ id, etiqueta }]
 export default function Pestanas({ opciones, activa, onCambiar }) {
   return (
-    <div className="flex gap-1 border-b border-border overflow-x-auto -mt-2">
+    <div className="flex gap-1 border-b border-border overflow-x-auto overflow-y-hidden -mt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {opciones.map((o) => (
         <button
           key={o.id}

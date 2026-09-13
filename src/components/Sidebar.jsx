@@ -27,7 +27,7 @@ export default function Sidebar({ abierto, onCerrar }) {
             <img
               src="/logo-sigfevak.png"
               alt="SIGFEVAK"
-              className="w-8 h-8 rounded-[7px] shrink-0"
+              className="w-10 h-10 object-cover shrink-0"
             />
             <div>
               <div className="font-bold text-[14.5px] tracking-[-0.02em] leading-none">

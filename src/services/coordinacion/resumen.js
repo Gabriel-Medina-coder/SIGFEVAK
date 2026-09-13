@@ -46,7 +46,7 @@ export async function obtenerResumenGeneral() {
       .then(lanzar),
     supabase
       .from('v_nomina_totales')
-      .select('id_periodo, nombre, percepciones, deducciones, neto')
+      .select('id_periodo, id_agente, nombre, percepciones, deducciones, neto')
       .then(lanzar),
     supabase
       .from('v_campana_resumen')
@@ -60,6 +60,8 @@ export async function obtenerResumenGeneral() {
   ]);
 
   const suma = (lista, campo) => lista.reduce((acc, r) => acc + Number(r[campo] ?? 0), 0);
+  const ultimoPeriodo = Math.max(0, ...nomina.map((n) => n.id_periodo));
+  const nominaUltima = nomina.filter((n) => n.id_periodo === ultimoPeriodo);
 
   const volumenPorPeriodo = Object.values(
     entradasPeriodo.reduce((acc, r) => {
@@ -78,9 +80,9 @@ export async function obtenerResumenGeneral() {
     clientesActivos: clientes.length,
     fiscal,
     calendario,
-    nominaTotal: suma(nomina, 'neto'),
-    nominaPercepciones: suma(nomina, 'percepciones'),
-    agentesEnNomina: nomina.length,
+    nominaTotal: suma(nominaUltima, 'neto'),
+    nominaPercepciones: suma(nominaUltima, 'percepciones'),
+    agentesEnNomina: nominaUltima.length,
     campanasActivas: campanas.filter((c) => c.estatus === 'ACTIVA').length,
     inversionMarketing: suma(campanas, 'gasto_total'),
     facturacion: facturacion.sort((a, b) => a.periodo.localeCompare(b.periodo)),

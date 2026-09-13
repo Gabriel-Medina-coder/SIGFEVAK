@@ -44,7 +44,7 @@ export default function Login() {
     <main className="min-h-dvh bg-bg text-text grid place-items-center p-6">
       <section className="bg-surface border border-border rounded-xl w-full max-w-sm">
         <div className="px-[22px] py-[18px] border-b border-border flex items-center gap-2.5">
-          <img src="/logo-sigfevak.png" alt="SIGFEVAK" className="w-8 h-8 rounded-[7px]" />
+          <img src="/logo-sigfevak.png" alt="SIGFEVAK" className="w-10 h-10 object-cover" />
           <div>
             <div className="font-bold text-[14.5px] tracking-[-0.02em] leading-none">SIGFEVAK</div>
             <div className="text-[10.5px] text-text-dim mt-0.5">Iniciar sesión</div>

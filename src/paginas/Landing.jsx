@@ -29,7 +29,7 @@ export default function Landing() {
     <div className="min-h-dvh bg-bg text-text">
       <header className="px-7 py-[18px] border-b border-border flex items-center justify-between max-w-6xl mx-auto">
         <div className="flex items-center gap-2.5">
-          <img src="/logo-sigfevak.png" alt="SIGFEVAK" className="w-8 h-8 rounded-[7px]" />
+          <img src="/logo-sigfevak.png" alt="SIGFEVAK" className="w-10 h-10 object-cover" />
           <div>
             <div className="font-bold text-[14.5px] tracking-[-0.02em] leading-none">SIGFEVAK</div>
             <div className="text-[10.5px] text-text-dim mt-0.5">Comercializadora Nacional</div>
