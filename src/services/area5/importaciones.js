@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient';
 import { datos, uno, limpiar } from '@/lib/consulta';
+import { hoyIso } from '@/lib/formato';
 
 // Área 5 · Importaciones y licencias. IGI, DTA e IVA de importación los calcula la base con parametros_fiscales
 // (RN-A5-12, RN-A5-13); el frontend nunca los calcula.
@@ -27,11 +28,15 @@ export async function listarImpuestosPorProducto() {
   return supabase.from('v_impuestos_importacion_producto').select('*').then(datos);
 }
 
+// RN-A5-20: solo la tasa vigente hoy de cada fracción; las de años anteriores quedan para el histórico
 export async function listarFraccionesConTasa() {
+  const hoy = hoyIso();
   return supabase
     .from('parametros_fiscales')
     .select('fraccion, valor, fuente')
     .eq('clave', 'TASA_IGI')
+    .lte('vigencia_inicio', hoy)
+    .or(`vigencia_fin.is.null,vigencia_fin.gte.${hoy}`)
     .order('fraccion')
     .then(datos);
 }

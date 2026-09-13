@@ -29,7 +29,16 @@ export async function listarObligaciones() {
     )
     .eq('activo', true)
     .order('fecha_vencimiento', { ascending: true })
-    .then(datos);
+    .then(datos)
+    .then(ordenarPorAtencion);
+}
+
+// Primero lo que falta atender (por vencimiento, la más próxima arriba); después lo pagado y cerrado, lo más reciente arriba
+const ATENDIDAS = ['PAGADO', 'CONCILIADO', 'CERRADO'];
+function ordenarPorAtencion(lista) {
+  const abiertas = lista.filter((o) => !ATENDIDAS.includes(o.estado));
+  const atendidas = lista.filter((o) => ATENDIDAS.includes(o.estado)).reverse();
+  return [...abiertas, ...atendidas];
 }
 
 export async function listarCalendario() {
