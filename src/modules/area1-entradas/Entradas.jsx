@@ -497,7 +497,7 @@ function FormOrden({ usuario, onListo, onCancelar }) {
     setEnviando(true);
     setError('');
     try {
-      await crearOrden(f);
+      await crearOrden({ ...f, id_producto_destino: f.id_producto });
       onListo();
     } catch (err) {
       setError(mensajeDeError(err));
